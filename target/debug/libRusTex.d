@@ -1,1 +1,0 @@
-/home/quentin/Documents/Rust/LaTeX-rs/target/debug/libRusTex.rlib: /home/quentin/Documents/Rust/LaTeX-rs/src/equations.rs /home/quentin/Documents/Rust/LaTeX-rs/src/core.rs /home/quentin/Documents/Rust/LaTeX-rs/src/sections.rs /home/quentin/Documents/Rust/LaTeX-rs/src/lib.rs /home/quentin/Documents/Rust/LaTeX-rs/src/latex_file.rs
