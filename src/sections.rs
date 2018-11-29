@@ -139,6 +139,9 @@ mod tests_section {
     #[test]
     fn complex_nested_write_in_file() {
         let mut f = new_latex_file("./tests_results/sections/section_complex_nested_test.tex");
+        f.change_author("Quentin");
+        f.change_title("Test Nested Write in File");
+        f.begin_document();
         let mut s1 = Section::new_section("Section1");
         let mut s2 = Section::new_subsection("subsect");
         let s3 = Section::new_subsubsection("subsubsubsub");
@@ -149,6 +152,7 @@ mod tests_section {
         s1.add_content(Core::Sec(s4));
         assert_eq!(s1.content.len(), 2);
         s1.write_latex(&mut f);
+        f.write_footer();
     }
 
 }
