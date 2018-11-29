@@ -14,7 +14,7 @@ pub struct LatexFile {
     /// The name of the authors
     author: Option<String>,
     /// The names of the includes
-    includes: Option<Vec<String>>,
+    includes: Vec<String>,
     /// The style of the document (article, book, ...)
     style: String,
 }
@@ -74,19 +74,19 @@ impl LatexFile {
         self.author = None;
     }
 
+    /// Adds a include
+    pub fn add_include(&mut self, include: &str) {
+        self.includes.push(include.to_string());
+    }
+
 
     /// Writes the title, authors, includes, ... and begin the document
     pub fn begin_document(&mut self) {
         /* ----- INCLUDES ----- */
-        match self.includes {
-            None => {},
-            Some(ref vec) => {
-                for include in vec.iter(){
-                    let mut buf = BufWriter::new(&mut self.file);
-                    write!(&mut buf, "\\include{{{}}}\n", include.to_string()).unwrap();
-                }
-            }
-        };
+        for include in self.includes.iter(){
+            let mut buf = BufWriter::new(&mut self.file);
+            write!(&mut buf, "\\include{{{}}}\n", include.to_string()).unwrap();
+        }
 
         /* ----- TITLE ----- */
         match self.title {
@@ -119,7 +119,7 @@ pub fn new_latex_file(filename: &str) -> LatexFile {
         file: f,
         title: None,
         author: None,
-        includes: None,
+        includes: Vec::new(),
         style:  "article".to_string(),
     };
     ltx_file.write_header_article();

@@ -141,6 +141,7 @@ mod tests_section {
         let mut f = new_latex_file("./tests_results/sections/section_complex_nested_test.tex");
         f.change_author("Quentin");
         f.change_title("Test Nested Write in File");
+        f.add_include("graphics");
         f.begin_document();
         let mut s1 = Section::new_section("Section1");
         let mut s2 = Section::new_subsection("subsect");
