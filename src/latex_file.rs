@@ -29,8 +29,6 @@ impl Write for LatexFile {
     }
 }
 
-
-
 impl LatexFile {
     /// Writes raw text in the file
     fn write_in_file(&mut self, line: &str) {
@@ -79,18 +77,24 @@ impl LatexFile {
         self.includes.push(include.to_string());
     }
 
+    /// Adds a list of includes
+    pub fn add_include_list(&mut self, includes: Vec<&str>) {
+        for include in includes.iter() {
+            self.add_include(include);
+        }
+    }
 
     /// Writes the title, authors, includes, ... and begin the document
     pub fn begin_document(&mut self) {
         /* ----- INCLUDES ----- */
-        for include in self.includes.iter(){
+        for include in self.includes.iter() {
             let mut buf = BufWriter::new(&mut self.file);
             write!(&mut buf, "\\include{{{}}}\n", include.to_string()).unwrap();
         }
 
         /* ----- TITLE ----- */
         match self.title {
-            None => {},
+            None => {}
             Some(ref t) => {
                 let mut buf = BufWriter::new(&mut self.file);
                 write!(&mut buf, "\\title{{{}}}\n", t.to_string()).unwrap();
@@ -99,31 +103,27 @@ impl LatexFile {
 
         /* ----- AUTHOR ----- */
         match self.author {
-            None => {},
+            None => {}
             Some(ref auth) => {
                 let mut buf = BufWriter::new(&mut self.file);
                 write!(&mut buf, "\\author{{{}}}\n", auth.to_string()).unwrap();
             }
         };
 
-
-    self.write_in_file("\\begin{document}\n");
-    self.write_in_file("\\maketitle\n");
+        self.write_in_file("\\begin{document}\n");
+        self.write_in_file("\\maketitle\n");
     }
 }
 /// Returns a new LatexFile
 pub fn new_latex_file(filename: &str) -> LatexFile {
-
     let f = File::create(filename).unwrap();
     let mut ltx_file = LatexFile {
         file: f,
         title: None,
         author: None,
         includes: Vec::new(),
-        style:  "article".to_string(),
+        style: "article".to_string(),
     };
     ltx_file.write_header_article();
     ltx_file
 }
-
-
