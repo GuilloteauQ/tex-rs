@@ -3,6 +3,7 @@ pub mod equations;
 pub mod core;
 pub mod latex_file;
 pub mod operators;
+pub mod displays;
 
 #[cfg(test)]
 mod tests {

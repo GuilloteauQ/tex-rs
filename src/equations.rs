@@ -5,6 +5,7 @@ use std::io::Write;
 use core::*;
 use latex_file::*;
 use operators::*;
+use displays::*;
 use std::fmt;
 
 #[derive(Debug, PartialEq)]
@@ -25,8 +26,8 @@ pub enum Symbols {
 
 impl Symbols {
     /// Returns the enum corresponding to the String
-    pub fn get_symbol(symb: &str) -> Self {
-        match symb {
+    pub fn get_symbol(symb: String) -> Self {
+        match symb.as_ref() {
             "=" => Symbols::Equals,
             "==" => Symbols::Equals,
             "<=" => Symbols::LessOrEquals,
@@ -65,7 +66,7 @@ impl Symbols {
     }
 }
 
-fn is_op(s: &str) -> bool {
+fn is_op(s: &String) -> bool {
     s == "==" || s == "=" || s == "<" || s == "<=" || s == ">" || s == ">=" || s == "!="
         || s == "<>"
 }
@@ -77,20 +78,42 @@ pub enum EquationElements {
 }
 
 impl EquationElements {
-    fn get_enum(s: &str) -> Self {
-        if is_op(&s) {
-            return EquationElements::Symb(Symbols::get_symbol(&s));
+    fn get_enum(elem: String) -> Self {
+        if is_op(&elem) {
+            return EquationElements::Symb(Symbols::get_symbol(elem));
         } else {
-            return EquationElements::Text(s.to_string());
+            return EquationElements::Text(elem);
         }
     }
 }
 
 pub type Equation = Vec<EquationElements>;
 
+pub trait StrOrString {
+    fn convert_string(&self) -> String;
+}
+
+impl<'a> StrOrString for &'a str {
+    fn convert_string(&self) -> String {
+        String::from(*self)
+    }
+}
+
+impl StrOrString for String {
+    fn convert_string(&self) -> String {
+        let mut result = String::new();
+        for letter in (*self).chars() {
+            result.push(letter);
+        }
+        result
+    }
+}
+
 /// Returns an Equation from a vector of str
-pub fn new_equation(vec: &Vec<&str>) -> Equation {
-    vec.iter().map(|s| EquationElements::get_enum(s)).collect()
+pub fn new_equation<T: StrOrString>(vec: &Vec<T>) -> Equation {
+    vec.iter()
+        .map(|s| EquationElements::get_enum(s.convert_string()))
+        .collect()
 }
 
 impl Writable for EquationElements {
@@ -129,14 +152,14 @@ mod tests_symbols {
 
     #[test]
     fn getting_symbols() {
-        assert_eq!(Symbols::get_symbol("=="), Symbols::Equals);
-        assert_eq!(Symbols::get_symbol("="), Symbols::Equals);
-        assert_eq!(Symbols::get_symbol(">="), Symbols::MoreOrEquals);
-        assert_eq!(Symbols::get_symbol("<="), Symbols::LessOrEquals);
-        assert_eq!(Symbols::get_symbol("<"), Symbols::Less);
-        assert_eq!(Symbols::get_symbol(">"), Symbols::More);
-        assert_eq!(Symbols::get_symbol("!="), Symbols::Diff);
-        assert_eq!(Symbols::get_symbol("<>"), Symbols::Diff);
+        assert_eq!(Symbols::get_symbol("==".to_string()), Symbols::Equals);
+        assert_eq!(Symbols::get_symbol("=".to_string()), Symbols::Equals);
+        assert_eq!(Symbols::get_symbol(">=".to_string()), Symbols::MoreOrEquals);
+        assert_eq!(Symbols::get_symbol("<=".to_string()), Symbols::LessOrEquals);
+        assert_eq!(Symbols::get_symbol("<".to_string()), Symbols::Less);
+        assert_eq!(Symbols::get_symbol(">".to_string()), Symbols::More);
+        assert_eq!(Symbols::get_symbol("!=".to_string()), Symbols::Diff);
+        assert_eq!(Symbols::get_symbol("<>".to_string()), Symbols::Diff);
     }
 
     #[test]
@@ -177,6 +200,16 @@ mod tests_equations {
         let mut f = new_latex_file("./tests_results/equations/multiple_equals.tex");
         f.begin_document();
         let eq = new_equation(&vec!["1", ">=", "0", "=", "x"]);
+        eq.write_latex(&mut f);
+        f.write_footer();
+    }
+
+    #[test]
+    fn multiple_frac() {
+        let mut f = new_latex_file("./tests_results/equations/frac.tex");
+        f.begin_document();
+        let v = vec![frac("4", "2"), "=".to_string(), "2".to_string()];
+        let eq = new_equation(&v);
         eq.write_latex(&mut f);
         f.write_footer();
     }
