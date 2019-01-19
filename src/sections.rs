@@ -10,16 +10,16 @@ use latex_file::LatexFile;
 // pub type Core = usize; // Should be an Enum
 // pub type LatexFile = File;
 
-pub struct Section<T, A, B> {
+pub struct Section {
     /// The title of the section
     pub title: String,
     /// 0 -> Section, 1 -> SubSection, 2 -> SubSubSection
     rank: usize,
     /// The content of the section
-    content: Vec<Core<T, A, B>>,
+    content: Vec<Core>,
 }
 
-impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Section<T, A, B> {
+impl Section {
     /// Returns a new (sub, subsub)Section depending on the rank
     fn new(title: String, rank: usize) -> Self {
         assert!(rank <= 2);
@@ -46,7 +46,7 @@ impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Section<T, A, B> {
     }
 
     /// Push some content in the section
-    pub fn add_content(&mut self, new_content: Core<T, A, B>) {
+    pub fn add_content(&mut self, new_content: Core) {
         self.content.push(new_content);
     }
 
@@ -71,7 +71,7 @@ impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Section<T, A, B> {
     }
 }
 
-impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Writable for Section<T, A, B> {
+impl Writable for Section {
     fn write_latex(&self, mut file: &mut LatexFile) {
         let mut writer = BufWriter::new(file);
         self.write_to_buffer(&mut writer);

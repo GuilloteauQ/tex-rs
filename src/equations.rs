@@ -52,15 +52,16 @@ impl Symbols {
     }
 
     /// Returns the LaTeX "code" for each item
-    pub fn latex_code(&self) -> &str {
-        match self {
+    pub fn latex_code(&self) -> String {
+        let x = match self {
             &Symbols::Equals => " = ",
             &Symbols::LessOrEquals => " \\leq ",
             &Symbols::Less => " < ",
             &Symbols::MoreOrEquals => " \\geq ",
             &Symbols::More => " > ",
             &Symbols::Diff => " \\neq ",
-        }
+        };
+        String::from(x)
     }
 }
 
@@ -69,13 +70,13 @@ fn is_op(s: &str) -> bool {
         || s == "<>"
 }
 
-pub enum EquationElements<T, A, B> {
+pub enum EquationElements {
     Text(String),
     Symb(Symbols),
-    Operator(Operators<T, A, B>),
+    Operator(Operators),
 }
 
-impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> EquationElements<T, A, B> {
+impl EquationElements {
     fn get_enum(s: &str) -> Self {
         if is_op(&s) {
             return EquationElements::Symb(Symbols::get_symbol(&s));
@@ -85,33 +86,29 @@ impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> EquationElements<T, A, B
     }
 }
 
-pub type Equation<T, A, B> = Vec<EquationElements<T, A, B>>;
+pub type Equation = Vec<EquationElements>;
 
 /// Returns an Equation from a vector of str
-pub fn new_equation<T: fmt::Display, A: fmt::Display, B: fmt::Display>(
-    vec: &Vec<&str>,
-) -> Equation<T, A, B> {
+pub fn new_equation(vec: &Vec<&str>) -> Equation {
     vec.iter().map(|s| EquationElements::get_enum(s)).collect()
 }
 
-impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Writable for EquationElements<T, A, B> {
+impl Writable for EquationElements {
     fn write_latex(&self, file: &mut LatexFile) {
         let mut writer = BufWriter::new(file);
         self.write_to_buffer(&mut writer);
     }
 
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>) {
-        let st = match self {
-            &EquationElements::Text(ref s) => s,
-            &EquationElements::Symb(ref s) => s.latex_code(),
-            &EquationElements::Operator(ref s) => s.latex_code(),
-        };
-
-        write!(&mut buf, "{}", st).unwrap();
+        match self {
+            &EquationElements::Text(ref s) => write!(&mut buf, "{} ", s).unwrap(),
+            &EquationElements::Symb(ref s) => write!(&mut buf, "{} ", s.latex_code()).unwrap(),
+            &EquationElements::Operator(ref s) => write!(&mut buf, "{} ", s.latex_code()).unwrap(),
+        }
     }
 }
 
-impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Writable for Equation<T, A, B> {
+impl Writable for Equation {
     fn write_latex(&self, file: &mut LatexFile) {
         let mut writer = BufWriter::new(file);
         self.write_to_buffer(&mut writer);

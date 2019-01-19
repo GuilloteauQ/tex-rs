@@ -14,10 +14,10 @@ pub trait Writable {
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>);
 }
 
-pub enum Core<T, A, B> {
-    Sec(Section<T, A, B>),
+pub enum Core {
+    Sec(Section),
     RawText(String),
-    Equa(Equation<T, A, B>),
+    Equa(Equation),
 }
 
 impl Writable for String {
@@ -31,7 +31,7 @@ impl Writable for String {
     }
 }
 
-impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Writable for Core<T, A, B> {
+impl Writable for Core {
     fn write_latex(&self, mut file: &mut LatexFile) {
         match self {
             &Core::Sec(ref section) => section.write_latex(&mut file),
@@ -49,7 +49,7 @@ impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Writable for Core<T, A, 
     }
 }
 
-impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Core<T, A, B> {
+impl Core {
     /// Returns a new section
     pub fn new_section(title: &str) -> Self {
         Core::Sec(Section::new_section(title))
@@ -71,7 +71,7 @@ impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Core<T, A, B> {
     }
 
     /// Returns a new equation
-    pub fn new_equation(eq: Equation<T, A, B>) -> Self {
+    pub fn new_equation(eq: Equation) -> Self {
         Core::Equa(eq)
     }
 }
