@@ -3,7 +3,6 @@
 use core::*;
 use std::io::BufWriter;
 use std::io::Write;
-use std::fmt;
 use latex_file::LatexFile;
 
 // Temporary
@@ -72,7 +71,7 @@ impl Section {
 }
 
 impl Writable for Section {
-    fn write_latex(&self, mut file: &mut LatexFile) {
+    fn write_latex(&self, file: &mut LatexFile) {
         let mut writer = BufWriter::new(file);
         self.write_to_buffer(&mut writer);
     }

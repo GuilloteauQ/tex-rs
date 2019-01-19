@@ -5,8 +5,6 @@ use std::io::Write;
 use core::*;
 use latex_file::*;
 use operators::*;
-use displays::*;
-use std::fmt;
 use str_or_string::*;
 
 #[derive(Debug, PartialEq)]
@@ -158,6 +156,7 @@ mod tests_symbols {
 #[cfg(test)]
 mod tests_equations {
     use super::*;
+    use displays::*;
 
     #[test]
     fn strings_to_equation() {

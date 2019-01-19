@@ -47,7 +47,7 @@ impl LatexFile {
     }
 
     /// Writes an include in the file
-    fn write_include(&mut self, include: &str) {
+    pub fn write_include(&mut self, include: &str) {
         let mut buf = BufWriter::new(&mut self.file);
         write!(&mut buf, "\\include{{{}}}\n", include.to_string()).unwrap();
     }

@@ -5,13 +5,12 @@ use equations::*;
 use latex_file::LatexFile;
 use std::io::BufWriter;
 use std::io::Write;
-use std::fmt;
 
 // pub type LatexFile = File;
 
 pub trait Writable {
     fn write_latex(&self, file: &mut LatexFile);
-    fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>);
+    fn write_to_buffer(&self, buf: &mut BufWriter<&mut LatexFile>);
 }
 
 pub enum Core {
@@ -21,7 +20,7 @@ pub enum Core {
 }
 
 impl Writable for String {
-    fn write_latex(&self, mut file: &mut LatexFile) {
+    fn write_latex(&self, file: &mut LatexFile) {
         let mut writer = BufWriter::new(file);
         self.write_to_buffer(&mut writer);
     }

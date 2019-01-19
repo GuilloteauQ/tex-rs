@@ -2,10 +2,8 @@
 ///
 use std::io::BufWriter;
 use std::io::Write;
-use std::fmt;
 use core::*;
 use latex_file::*;
-use equations::*;
 
 pub enum VarOrImm {
     Var(String),
@@ -95,7 +93,7 @@ impl Operators {
 }
 
 impl Writable for Operators {
-    fn write_latex(&self, mut file: &mut LatexFile) {
+    fn write_latex(&self, file: &mut LatexFile) {
         let mut writer = BufWriter::new(file);
         self.write_to_buffer(&mut writer);
     }
@@ -108,7 +106,7 @@ impl Writable for Operators {
 #[cfg(test)]
 mod tests_operators {
     use super::*;
-    use equations::new_equation;
+    use equations::*;
 
     #[test]
     fn test_sum() {
