@@ -4,6 +4,8 @@ use std::io::BufWriter;
 use std::io::Write;
 use core::*;
 use latex_file::*;
+use operators::*;
+use std::fmt;
 
 #[derive(Debug, PartialEq)]
 pub enum Symbols {
@@ -67,13 +69,13 @@ fn is_op(s: &str) -> bool {
         || s == "<>"
 }
 
-#[derive(Debug)]
-pub enum EquationElements {
+pub enum EquationElements<T, A, B> {
     Text(String),
     Symb(Symbols),
+    Operator(Operators<T, A, B>),
 }
 
-impl EquationElements {
+impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> EquationElements<T, A, B> {
     fn get_enum(s: &str) -> Self {
         if is_op(&s) {
             return EquationElements::Symb(Symbols::get_symbol(&s));
@@ -83,14 +85,16 @@ impl EquationElements {
     }
 }
 
-pub type Equation = Vec<EquationElements>;
+pub type Equation<T, A, B> = Vec<EquationElements<T, A, B>>;
 
 /// Returns an Equation from a vector of str
-fn new_equation(vec: &Vec<&str>) -> Equation {
+pub fn new_equation<T: fmt::Display, A: fmt::Display, B: fmt::Display>(
+    vec: &Vec<&str>,
+) -> Equation<T, A, B> {
     vec.iter().map(|s| EquationElements::get_enum(s)).collect()
 }
 
-impl Writable for EquationElements {
+impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Writable for EquationElements<T, A, B> {
     fn write_latex(&self, file: &mut LatexFile) {
         let mut writer = BufWriter::new(file);
         self.write_to_buffer(&mut writer);
@@ -100,20 +104,21 @@ impl Writable for EquationElements {
         let st = match self {
             &EquationElements::Text(ref s) => s,
             &EquationElements::Symb(ref s) => s.latex_code(),
+            &EquationElements::Operator(ref s) => s.latex_code(),
         };
 
         write!(&mut buf, "{}", st).unwrap();
     }
 }
 
-impl Writable for Equation {
+impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Writable for Equation<T, A, B> {
     fn write_latex(&self, file: &mut LatexFile) {
         let mut writer = BufWriter::new(file);
         self.write_to_buffer(&mut writer);
     }
 
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>) {
-        write!(&mut buf, "\\begin{{equation}}\n",).unwrap();
+        write!(&mut buf, "\\begin{{equation}}\n\\displaystyle ",).unwrap();
         for item in self.iter() {
             item.write_to_buffer(&mut buf);
         }
@@ -163,16 +168,20 @@ mod tests_equations {
     #[test]
     fn simple_write() {
         let mut f = new_latex_file("./tests_results/equations/simple_eq.tex");
+        f.begin_document();
         let vec = vec!["a", "=", "b"];
         let eq = new_equation(&vec);
         eq.write_latex(&mut f);
+        f.write_footer();
     }
 
     #[test]
     fn multiple_equals() {
         let mut f = new_latex_file("./tests_results/equations/multiple_equals.tex");
+        f.begin_document();
         let eq = new_equation(&vec!["1", ">=", "0", "=", "x"]);
         eq.write_latex(&mut f);
+        f.write_footer();
     }
 
 }

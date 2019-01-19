@@ -2,6 +2,7 @@ pub mod sections;
 pub mod equations;
 pub mod core;
 pub mod latex_file;
+pub mod operators;
 
 #[cfg(test)]
 mod tests {

@@ -2,10 +2,10 @@
 ///
 use sections::*;
 use equations::*;
-use latex_file::*;
-use std::fs::File;
+use latex_file::LatexFile;
 use std::io::BufWriter;
 use std::io::Write;
+use std::fmt;
 
 // pub type LatexFile = File;
 
@@ -14,10 +14,10 @@ pub trait Writable {
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>);
 }
 
-pub enum Core {
-    Sec(Section),
+pub enum Core<T, A, B> {
+    Sec(Section<T, A, B>),
     RawText(String),
-    Equa(Equation),
+    Equa(Equation<T, A, B>),
 }
 
 impl Writable for String {
@@ -29,10 +29,9 @@ impl Writable for String {
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>) {
         write!(&mut buf, "{}", self.to_string()).unwrap();
     }
-
 }
 
-impl Writable for Core {
+impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Writable for Core<T, A, B> {
     fn write_latex(&self, mut file: &mut LatexFile) {
         match self {
             &Core::Sec(ref section) => section.write_latex(&mut file),
@@ -50,7 +49,7 @@ impl Writable for Core {
     }
 }
 
-impl Core {
+impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Core<T, A, B> {
     /// Returns a new section
     pub fn new_section(title: &str) -> Self {
         Core::Sec(Section::new_section(title))
@@ -72,12 +71,10 @@ impl Core {
     }
 
     /// Returns a new equation
-    pub fn new_equation(eq: Equation) -> Self {
+    pub fn new_equation(eq: Equation<T, A, B>) -> Self {
         Core::Equa(eq)
     }
 }
-
-
 
 #[cfg(test)]
 mod tests_raw_text {

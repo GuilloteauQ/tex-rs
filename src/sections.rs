@@ -3,22 +3,23 @@
 use core::*;
 use std::io::BufWriter;
 use std::io::Write;
-use latex_file::*;
+use std::fmt;
+use latex_file::LatexFile;
 
 // Temporary
 // pub type Core = usize; // Should be an Enum
 // pub type LatexFile = File;
 
-pub struct Section {
+pub struct Section<T, A, B> {
     /// The title of the section
     pub title: String,
     /// 0 -> Section, 1 -> SubSection, 2 -> SubSubSection
     rank: usize,
     /// The content of the section
-    content: Vec<Core>,
+    content: Vec<Core<T, A, B>>,
 }
 
-impl Section {
+impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Section<T, A, B> {
     /// Returns a new (sub, subsub)Section depending on the rank
     fn new(title: String, rank: usize) -> Self {
         assert!(rank <= 2);
@@ -45,7 +46,7 @@ impl Section {
     }
 
     /// Push some content in the section
-    pub fn add_content(&mut self, new_content: Core) {
+    pub fn add_content(&mut self, new_content: Core<T, A, B>) {
         self.content.push(new_content);
     }
 
@@ -70,7 +71,7 @@ impl Section {
     }
 }
 
-impl Writable for Section {
+impl<T: fmt::Display, A: fmt::Display, B: fmt::Display> Writable for Section<T, A, B> {
     fn write_latex(&self, mut file: &mut LatexFile) {
         let mut writer = BufWriter::new(file);
         self.write_to_buffer(&mut writer);
@@ -123,17 +124,21 @@ mod tests_section {
     #[test]
     fn simple_write_in_file() {
         let mut f = new_latex_file("./tests_results/sections/section_simple_test.tex");
+        f.begin_document();
         let s1 = Section::new_section("Section1");
         s1.write_latex(&mut f);
+        f.write_footer();
     }
 
     #[test]
     fn nested_write_in_file() {
         let mut f = new_latex_file("./tests_results/sections/section_nested_test.tex");
+        f.begin_document();
         let mut s1 = Section::new_section("Section1");
         let s2 = Section::new_subsection("subsect");
         s1.add_content(Core::Sec(s2));
         s1.write_latex(&mut f);
+        f.write_footer();
     }
 
     #[test]

@@ -111,7 +111,9 @@ impl LatexFile {
         };
 
         self.write_in_file("\\begin{document}\n");
-        self.write_in_file("\\maketitle\n");
+        if self.title != None || self.author != None {
+            self.write_in_file("\\maketitle\n");
+        }
     }
 }
 /// Returns a new LatexFile
