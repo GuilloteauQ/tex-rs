@@ -7,6 +7,7 @@ use latex_file::*;
 use operators::*;
 use displays::*;
 use std::fmt;
+use str_or_string::*;
 
 #[derive(Debug, PartialEq)]
 pub enum Symbols {
@@ -88,26 +89,6 @@ impl EquationElements {
 }
 
 pub type Equation = Vec<EquationElements>;
-
-pub trait StrOrString {
-    fn convert_string(&self) -> String;
-}
-
-impl<'a> StrOrString for &'a str {
-    fn convert_string(&self) -> String {
-        String::from(*self)
-    }
-}
-
-impl StrOrString for String {
-    fn convert_string(&self) -> String {
-        let mut result = String::new();
-        for letter in (*self).chars() {
-            result.push(letter);
-        }
-        result
-    }
-}
 
 /// Returns an Equation from a vector of str
 pub fn new_equation<T: StrOrString>(vec: &Vec<T>) -> Equation {

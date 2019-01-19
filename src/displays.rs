@@ -1,6 +1,8 @@
 /// File for displaying elements in LaTeX
 ///
 
-pub fn frac(top: &str, bottom: &str) -> String {
-    format!("\\frac{{{}}}{{{}}}", top, bottom)
+use str_or_string::*;
+
+pub fn frac<A: StrOrString, B: StrOrString>(top: A, bottom: B) -> String {
+    format!("\\frac{{{}}}{{{}}}", top.convert_string(), bottom.convert_string())
 }

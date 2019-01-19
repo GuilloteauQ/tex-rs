@@ -4,6 +4,7 @@ pub mod core;
 pub mod latex_file;
 pub mod operators;
 pub mod displays;
+pub mod str_or_string;
 
 #[cfg(test)]
 mod tests {
