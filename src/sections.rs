@@ -11,6 +11,7 @@ use writable::*;
 // pub type Core = usize; // Should be an Enum
 // pub type LatexFile = File;
 
+#[derive(Clone)]
 pub struct Section {
     /// The title of the section
     pub title: String,

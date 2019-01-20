@@ -4,6 +4,7 @@ use latex_file::LatexFile;
 use writable::*;
 use core::*;
 
+#[derive(Clone)]
 pub struct SingleTag {
     /// Name of the Tag
     name: String,

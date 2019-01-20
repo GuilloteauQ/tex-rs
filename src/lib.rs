@@ -9,6 +9,8 @@ pub mod bloc;
 pub mod writable;
 pub mod symbols;
 pub mod tag;
+pub mod tabular;
+pub mod into_tab;
 
 #[cfg(test)]
 mod tests {

@@ -10,6 +10,7 @@ use std::io::Write;
 use writable::*;
 
 
+#[derive(Clone)]
 pub struct Bloc {
     /// The type of the Bloc
     bloc_type : String,

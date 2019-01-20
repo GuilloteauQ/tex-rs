@@ -1,7 +1,7 @@
 /// File to define symbols in LaTeX
 ///
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Symbols {
     /// =
     Equals,
