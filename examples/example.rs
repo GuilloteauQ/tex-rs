@@ -9,12 +9,12 @@ fn main() {
     f.author("GuilloteauQ");
     f.begin_document();
 
-    let mut abstract_bloc = Core::new_bloc("abstract");
+    let mut abstract_bloc = Core::bloc("abstract");
     abstract_bloc.add(Core::text("This document is an example of use of Tex-rs"));
     abstract_bloc.write_latex(&mut f);
 
-    let mut sec = Core::new_section("Examples");
-    let mut enume = Core::new_bloc("itemize");
+    let mut sec = Core::section("Examples");
+    let mut enume = Core::bloc("itemize");
 
     let countries = vec!["France", "UK", "Germany", "Italy"];
     sec.add(Core::text("Here are some countries in Europe"));

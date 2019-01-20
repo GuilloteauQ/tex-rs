@@ -49,17 +49,17 @@ impl Writable for Core {
 
 impl Core {
     /// Returns a new section
-    pub fn new_section<T: StrOrString>(title: T) -> Self {
+    pub fn section<T: StrOrString>(title: T) -> Self {
         Core::Sec(Section::new_section(title.convert_string()))
     }
 
     /// Returns a new subsection
-    pub fn new_subsection<T: StrOrString>(title: T) -> Self {
+    pub fn subsection<T: StrOrString>(title: T) -> Self {
         Core::Sec(Section::new_subsection(title.convert_string()))
     }
 
     /// Returns a new subsubsection
-    pub fn new_subsubsection<T: StrOrString>(title: T) -> Self {
+    pub fn subsubsection<T: StrOrString>(title: T) -> Self {
         Core::Sec(Section::new_subsubsection(title.convert_string()))
     }
 
@@ -69,17 +69,17 @@ impl Core {
     }
 
     /// Returns a new equation
-    pub fn new_equation(eq: Equation) -> Self {
+    pub fn equation(eq: Equation) -> Self {
         Core::Equa(eq)
     }
 
     /// Returns a new Bloc
-    pub fn new_bloc<T: StrOrString>(title: T) -> Self {
+    pub fn bloc<T: StrOrString>(title: T) -> Self {
         Core::Bloc(Bloc::new_empty(title.convert_string()))
     }
 
     /// Returns a new Tab
-    pub fn new_tab<T: IntoTab>(content: &T) -> Self {
+    pub fn tab<T: IntoTab>(content: &T) -> Self {
         Core::Tab(Tabular::new(content))
     }
 
@@ -120,7 +120,7 @@ mod tests_core {
     fn test_enumerate() {
         let mut f = new_latex_file("./tests_results/core/enumerate.tex");
         f.begin_document();
-        let mut enumerate = Core::new_bloc("enumerate");
+        let mut enumerate = Core::bloc("enumerate");
         for i in 0..5 {
             enumerate.add(Core::item(Core::text(format!("Blabla {}", i))));
         }
@@ -137,7 +137,7 @@ mod tests_core {
             vec.push(Core::text(i.to_string()));
         }
         // let vec = (0..5).map(|i| Core::text(i.to_string())).collect();
-        let tab = Core::new_tab(&vec);
+        let tab = Core::tab(&vec);
         tab.write_latex(&mut f);
         f.write_footer();
     }
@@ -155,7 +155,7 @@ mod tests_core {
             vec_2d.push(vec);
         }
         // let vec = (0..5).map(|i| Core::text(i.to_string())).collect();
-        let tab = Core::new_tab(&vec_2d);
+        let tab = Core::tab(&vec_2d);
         tab.write_latex(&mut f);
         f.write_footer();
     }

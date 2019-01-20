@@ -68,21 +68,21 @@ mod tests_bloc {
 
     #[test]
     fn creation_bloc_new() {
-        let _ = Bloc::new("center", vec![Core::new_bloc("verbatim")]);
+        let _ = Bloc::new("center", vec![Core::bloc("verbatim")]);
     }
 
     #[test]
     fn test_add() {
         let mut b = Bloc::new_empty("center");
         assert_eq!(b.content.len(), 0);
-        b.add(Core::new_bloc("verbatim"));
+        b.add(Core::bloc("verbatim"));
         assert_eq!(b.content.len(), 1);
     }
 
     #[test]
     fn test_add_core() {
-        let mut b = Core::new_bloc("center");
-        b.add(Core::new_bloc("verbatim"));
+        let mut b = Core::bloc("center");
+        b.add(Core::bloc("verbatim"));
     }
 
     #[test]
