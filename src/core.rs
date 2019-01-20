@@ -8,16 +8,19 @@ use latex_file::LatexFile;
 use std::io::BufWriter;
 use writable::*;
 use tag::*;
+use tabular::*;
+use into_tab::*;
 
 // pub type LatexFile = File;
 
-
+#[derive(Clone)]
 pub enum Core {
     Sec(Section),
     RawText(String),
     Equa(Equation),
     Bloc(Bloc),
     Tag(SingleTag),
+    Tab(Tabular),
 }
 
 impl Writable for Core {
@@ -28,6 +31,7 @@ impl Writable for Core {
             &Core::Equa(ref eq) => eq.write_latex(&mut file),
             &Core::Bloc(ref bloc) => bloc.write_latex(&mut file),
             &Core::Tag(ref tag) => tag.write_latex(&mut file),
+            &Core::Tab(ref tab) => tab.write_latex(&mut file),
         }
     }
 
@@ -38,6 +42,7 @@ impl Writable for Core {
             &Core::Equa(ref eq) => eq.write_to_buffer(&mut buf),
             &Core::Bloc(ref bloc) => bloc.write_to_buffer(&mut buf),
             &Core::Tag(ref tag) => tag.write_to_buffer(&mut buf),
+            &Core::Tab(ref tab) => tab.write_to_buffer(&mut buf),
         }
     }
 }
@@ -71,6 +76,11 @@ impl Core {
     /// Returns a new Bloc
     pub fn new_bloc<T: StrOrString>(title: T) -> Self {
         Core::Bloc(Bloc::new_empty(title.convert_string()))
+    }
+
+    /// Returns a new Tab
+    pub fn new_tab<T: IntoTab>(content: &T) -> Self {
+        Core::Tab(Tabular::new(content))
     }
 
     /// Returns a new \item tag
@@ -115,6 +125,38 @@ mod tests_core {
             enumerate.add(Core::item(Core::text(format!("Blabla {}", i))));
         }
         enumerate.write_latex(&mut f);
+        f.write_footer();
+    }
+
+    #[test]
+    fn test_tabular_one_dim() {
+        let mut f = new_latex_file("./tests_results/core/tabular_one_dim.tex");
+        f.begin_document();
+        let mut vec = Vec::new();
+        for i in 0..5 {
+            vec.push(Core::text(i.to_string()));
+        }
+        // let vec = (0..5).map(|i| Core::text(i.to_string())).collect();
+        let tab = Core::new_tab(&vec);
+        tab.write_latex(&mut f);
+        f.write_footer();
+    }
+
+    #[test]
+    fn test_tabular_two_dims() {
+        let mut f = new_latex_file("./tests_results/core/tabular_two_dims.tex");
+        f.begin_document();
+        let mut vec_2d = Vec::new();
+        for j in 0..6 {
+            let mut vec = Vec::new();
+            for i in 0..5 {
+                vec.push(Core::text((i + j).to_string()));
+            }
+            vec_2d.push(vec);
+        }
+        // let vec = (0..5).map(|i| Core::text(i.to_string())).collect();
+        let tab = Core::new_tab(&vec_2d);
+        tab.write_latex(&mut f);
         f.write_footer();
     }
 }

@@ -6,6 +6,7 @@ use latex_file::*;
 use writable::*;
 
 
+#[derive(Clone)]
 pub enum VarOrImm {
     Var(String),
     Imm(i32),
@@ -40,6 +41,7 @@ impl VarOrImm {
     }
 }
 
+#[derive(Clone)]
 pub enum Operators {
     /// Sum(variable, begin, end) body
     Sum(VarOrImm, VarOrImm, VarOrImm),

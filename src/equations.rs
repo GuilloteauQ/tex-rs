@@ -10,6 +10,7 @@ use writable::*;
 
 
 
+#[derive(Clone)]
 pub enum EquationElements {
     Text(String),
     Symb(Symbols),
