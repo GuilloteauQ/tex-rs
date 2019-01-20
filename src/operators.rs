@@ -2,7 +2,6 @@
 ///
 use std::io::BufWriter;
 use std::io::Write;
-use core::*;
 use latex_file::*;
 use writable::*;
 

@@ -5,8 +5,8 @@ use RusTex::writable::Writable;
 
 fn main() {
     let mut f = new_latex_file("out.tex");
-    f.change_title("Example of use of RusTex");
-    f.change_author("GuilloteauQ");
+    f.title("Example of use of RusTex");
+    f.author("GuilloteauQ");
     f.begin_document();
 
     let mut abstract_bloc = Core::new_bloc("abstract");

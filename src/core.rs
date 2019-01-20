@@ -6,7 +6,6 @@ use str_or_string::*;
 use bloc::Bloc;
 use latex_file::LatexFile;
 use std::io::BufWriter;
-use std::io::Write;
 use writable::*;
 use tag::*;
 

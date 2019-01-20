@@ -9,9 +9,9 @@ Work in progress
 // Defining the output file
 let mut f = new_latex_file("output.tex");
 // Adding a title to the document
-f.change_title("Example of use of RusTex");
+f.title("Example of use of RusTex");
 // Adding an author
-f.change_author("GuilloteauQ");
+f.author("GuilloteauQ");
 // Begin the core of the document
 f.begin_document();
 
