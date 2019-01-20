@@ -82,6 +82,15 @@ impl Core {
     pub fn new_bloc(title: &str) -> Self {
         Core::Bloc(Bloc::new_empty(title))
     }
+
+    /// Add an element to the content, if possible
+    pub fn add(&mut self, element: Core) {
+        match self {
+            &mut Core::Sec(ref mut section) => section.add_content(element),
+            &mut Core::Bloc(ref mut bloc) => bloc.add(element),
+            _ => panic!("No method 'add' for this type of data")
+        }
+    }
 }
 
 #[cfg(test)]

@@ -77,6 +77,12 @@ mod tests_bloc {
     }
 
     #[test]
+    fn test_add_core() {
+        let mut b = Core::new_bloc("center");
+        b.add(Core::new_bloc("verbatim"));
+    }
+
+    #[test]
     fn test_write_simple_bloc_empty() {
         let mut f = new_latex_file("./tests_results/bloc/bloc_simple_test_empty.tex");
         f.begin_document();
