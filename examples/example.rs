@@ -17,7 +17,7 @@ fn main() {
     let mut enume = Core::new_bloc("itemize");
 
     let countries = vec!["France", "UK", "Germany", "Italy"];
-    sec.add(Core::text("Here is some countries in Europe"));
+    sec.add(Core::text("Here are some countries in Europe"));
     for country in countries.iter() {
         enume.add(Core::item(Core::text(*country)));
     }

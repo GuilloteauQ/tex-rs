@@ -1,4 +1,4 @@
-# Tex-rs [![Build Status](https://travis-ci.com/GuilloteauQ/RusTex.svg?branch=master)](https://travis-ci.com/GuilloteauQ/RusTex)
+# Tex-rs [![Build Status](https://travis-ci.com/GuilloteauQ/tex-rs.svg?branch=master)](https://travis-ci.com/GuilloteauQ/tex-rs)
 A crate to generate LaTeX files in Rust
 
 Work in progress
@@ -26,7 +26,7 @@ let mut sec = Core::new_section("Examples");
 let mut itemize = Core::new_bloc("itemize");
 
 let countries = vec!["France", "UK", "Germany", "Italy"];
-sec.add(Core::text("Here is some countries in Europe"));
+sec.add(Core::text("Here are some countries in Europe"));
 for country in countries.iter() {
     itemize.add(Core::item(Core::text(*country)));
 }
@@ -38,4 +38,4 @@ sec.write_latex(&mut f);
 f.write_footer();
 ```
 
-![See the result here !](https://github.com/GuilloteauQ/RusTex/blob/master/examples/out.pdf)
+![See the result here !](https://github.com/GuilloteauQ/tex-rs/blob/master/examples/out.pdf)
