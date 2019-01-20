@@ -37,3 +37,5 @@ sec.write_latex(&mut f);
 
 f.write_footer();
 ```
+
+![See the result here !](https://github.com/GuilloteauQ/RusTex/blob/master/examples/out.pdf)
