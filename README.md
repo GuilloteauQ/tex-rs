@@ -25,7 +25,7 @@ let mut sec = Core::new_section("Examples");
 // Creating an itemize bloc
 let mut itemize = Core::new_bloc("itemize");
 
-let countries = vec!["France", "UK", "Germany", "Ialy"];
+let countries = vec!["France", "UK", "Germany", "Italy"];
 sec.add(Core::text("Here is some countries in Europe"));
 for country in countries.iter() {
     itemize.add(Core::item(Core::text(*country)));

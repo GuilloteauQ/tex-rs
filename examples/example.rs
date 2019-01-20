@@ -13,15 +13,10 @@ fn main() {
     abstract_bloc.add(Core::text("This document is an example of use of RusTex"));
     abstract_bloc.write_latex(&mut f);
 
-    let mut section = Core::new_section("Introduction");
-    section.add(Core::text("RusTex allows you to create sections"));
-    section.add(Core::new_subsection("... and subsection, and more!"));
-    section.write_latex(&mut f);
-
     let mut sec = Core::new_section("Examples");
     let mut enume = Core::new_bloc("itemize");
 
-    let countries = vec!["France", "UK", "Germany", "Ialy"];
+    let countries = vec!["France", "UK", "Germany", "Italy"];
     sec.add(Core::text("Here is some countries in Europe"));
     for country in countries.iter() {
         enume.add(Core::item(Core::text(*country)));
