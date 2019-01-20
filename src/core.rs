@@ -8,6 +8,7 @@ use latex_file::LatexFile;
 use std::io::BufWriter;
 use std::io::Write;
 use writable::*;
+use tag::*;
 
 // pub type LatexFile = File;
 
@@ -17,6 +18,7 @@ pub enum Core {
     RawText(String),
     Equa(Equation),
     Bloc(Bloc),
+    Tag(SingleTag),
 }
 
 impl Writable for Core {
@@ -26,6 +28,7 @@ impl Writable for Core {
             &Core::RawText(ref text) => text.write_latex(&mut file),
             &Core::Equa(ref eq) => eq.write_latex(&mut file),
             &Core::Bloc(ref bloc) => bloc.write_latex(&mut file),
+            &Core::Tag(ref tag) => tag.write_latex(&mut file),
         }
     }
 
@@ -35,6 +38,7 @@ impl Writable for Core {
             &Core::RawText(ref text) => text.write_to_buffer(&mut buf),
             &Core::Equa(ref eq) => eq.write_to_buffer(&mut buf),
             &Core::Bloc(ref bloc) => bloc.write_to_buffer(&mut buf),
+            &Core::Tag(ref tag) => tag.write_to_buffer(&mut buf),
         }
     }
 }
@@ -70,6 +74,11 @@ impl Core {
         Core::Bloc(Bloc::new_empty(title.convert_string()))
     }
 
+    /// Returns a new \item tag
+    pub fn item(content: Core) -> Self {
+        Core::Tag(SingleTag::item(content))
+    }
+
     /// Add an element to the content, if possible
     pub fn add(&mut self, element: Core) {
         match self {
@@ -90,5 +99,23 @@ mod tests_raw_text {
         let mut f = new_latex_file("./tests_results/raw_texts/simple_write.tex");
         let t1 = Core::new_raw_text("Quentin");
         t1.write_latex(&mut f);
+    }
+}
+
+#[cfg(test)]
+mod tests_core {
+    use super::*;
+    use latex_file::*;
+
+    #[test]
+    fn test_enumerate() {
+        let mut f = new_latex_file("./tests_results/core/enumerate.tex");
+        f.begin_document();
+        let mut enumerate = Core::new_bloc("enumerate");
+        for i in 0..5 {
+            enumerate.add(Core::item(Core::new_raw_text(format!("Blabla {}", i))));
+        }
+        enumerate.write_latex(&mut f);
+        f.write_footer();
     }
 }

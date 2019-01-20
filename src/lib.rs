@@ -8,6 +8,7 @@ pub mod str_or_string;
 pub mod bloc;
 pub mod writable;
 pub mod symbols;
+pub mod tag;
 
 #[cfg(test)]
 mod tests {
