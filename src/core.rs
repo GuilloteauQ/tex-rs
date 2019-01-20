@@ -2,6 +2,7 @@
 ///
 use sections::*;
 use equations::*;
+use str_or_string::*;
 use bloc::Bloc;
 use latex_file::LatexFile;
 use std::io::BufWriter;
@@ -54,23 +55,23 @@ impl Writable for Core {
 
 impl Core {
     /// Returns a new section
-    pub fn new_section(title: &str) -> Self {
-        Core::Sec(Section::new_section(title))
+    pub fn new_section<T: StrOrString>(title: T) -> Self {
+        Core::Sec(Section::new_section(title.convert_string()))
     }
 
     /// Returns a new subsection
-    pub fn new_subsection(title: &str) -> Self {
-        Core::Sec(Section::new_subsection(title))
+    pub fn new_subsection<T: StrOrString>(title: T) -> Self {
+        Core::Sec(Section::new_subsection(title.convert_string()))
     }
 
     /// Returns a new subsubsection
-    pub fn new_subsubsection(title: &str) -> Self {
-        Core::Sec(Section::new_subsubsection(title))
+    pub fn new_subsubsection<T: StrOrString>(title: T) -> Self {
+        Core::Sec(Section::new_subsubsection(title.convert_string()))
     }
 
     /// Return a new text
-    pub fn new_raw_text(raw_text: &str) -> Self {
-        Core::RawText(raw_text.to_string())
+    pub fn new_raw_text<T: StrOrString>(raw_text: T) -> Self {
+        Core::RawText(raw_text.convert_string())
     }
 
     /// Returns a new equation
@@ -79,8 +80,8 @@ impl Core {
     }
 
     /// Returns a new Bloc
-    pub fn new_bloc(title: &str) -> Self {
-        Core::Bloc(Bloc::new_empty(title))
+    pub fn new_bloc<T: StrOrString>(title: T) -> Self {
+        Core::Bloc(Bloc::new_empty(title.convert_string()))
     }
 
     /// Add an element to the content, if possible

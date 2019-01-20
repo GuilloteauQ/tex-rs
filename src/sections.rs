@@ -4,6 +4,7 @@ use core::*;
 use std::io::BufWriter;
 use std::io::Write;
 use latex_file::LatexFile;
+use str_or_string::*;
 
 // Temporary
 // pub type Core = usize; // Should be an Enum
@@ -20,28 +21,28 @@ pub struct Section {
 
 impl Section {
     /// Returns a new (sub, subsub)Section depending on the rank
-    fn new(title: String, rank: usize) -> Self {
+    fn new<T: StrOrString>(title: T, rank: usize) -> Self {
         assert!(rank <= 2);
         Section {
-            title: title,
+            title: title.convert_string(),
             rank: rank,
             content: Vec::new(),
         }
     }
 
     /// Returns a new Section
-    pub fn new_section(title: &str) -> Self {
-        Section::new(title.to_string(), 0)
+    pub fn new_section<T: StrOrString>(title: T) -> Self {
+        Section::new(title.convert_string(), 0)
     }
 
     /// Returns a new SubSection
-    pub fn new_subsection(title: &str) -> Self {
-        Section::new(title.to_string(), 1)
+    pub fn new_subsection<T: StrOrString>(title: T) -> Self {
+        Section::new(title.convert_string(), 1)
     }
 
     /// Returns a new SubSubSection
-    pub fn new_subsubsection(title: &str) -> Self {
-        Section::new(title.to_string(), 2)
+    pub fn new_subsubsection<T: StrOrString>(title: T) -> Self {
+        Section::new(title.convert_string(), 2)
     }
 
     /// Push some content in the section
@@ -50,8 +51,8 @@ impl Section {
     }
 
     /// Changes the title of the Section
-    pub fn change_title(&mut self, new_title: &str) {
-        self.title = new_title.to_string();
+    pub fn change_title<T: StrOrString>(&mut self, new_title: T) {
+        self.title = new_title.convert_string();
     }
 
     /// Returns the title of the section
