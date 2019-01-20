@@ -60,7 +60,7 @@ impl Core {
     }
 
     /// Return a new text
-    pub fn new_raw_text<T: StrOrString>(raw_text: T) -> Self {
+    pub fn text<T: StrOrString>(raw_text: T) -> Self {
         Core::RawText(raw_text.convert_string())
     }
 
@@ -97,7 +97,7 @@ mod tests_raw_text {
     #[test]
     fn simple_write_text() {
         let mut f = new_latex_file("./tests_results/raw_texts/simple_write.tex");
-        let t1 = Core::new_raw_text("Quentin");
+        let t1 = Core::text("Quentin");
         t1.write_latex(&mut f);
     }
 }
@@ -113,7 +113,7 @@ mod tests_core {
         f.begin_document();
         let mut enumerate = Core::new_bloc("enumerate");
         for i in 0..5 {
-            enumerate.add(Core::item(Core::new_raw_text(format!("Blabla {}", i))));
+            enumerate.add(Core::item(Core::text(format!("Blabla {}", i))));
         }
         enumerate.write_latex(&mut f);
         f.write_footer();

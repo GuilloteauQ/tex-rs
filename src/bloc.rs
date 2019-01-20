@@ -98,7 +98,7 @@ mod tests_bloc {
         let mut f = new_latex_file("./tests_results/bloc/bloc_simple_test_non_empty.tex");
         f.begin_document();
         let mut b = Bloc::new_empty("center");
-        b.add(Core::new_raw_text("This is supposed to be centered"));
+        b.add(Core::text("This is supposed to be centered"));
         b.write_latex(&mut f);
         f.write_footer();
     }
@@ -109,7 +109,7 @@ mod tests_bloc {
         f.begin_document();
         let mut b = Bloc::new_empty("center");
         let mut b2 = Bloc::new_empty("verbatim");
-        b2.add(Core::new_raw_text("To be or not to be"));
+        b2.add(Core::text("To be or not to be"));
         b.add(Core::Bloc(b2));
         b.write_latex(&mut f);
         f.write_footer();

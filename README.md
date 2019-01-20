@@ -17,7 +17,7 @@ f.begin_document();
 
 // Writing an abstract
 let mut abstract_bloc = Core::new_bloc("abstract");
-abstract_bloc.add(Core::new_raw_text("This document is an example of use of RusTex"));
+abstract_bloc.add(Core::text("This document is an example of use of RusTex"));
 abstract_bloc.write_latex(&mut f);
 
 // Creating a new section
@@ -26,9 +26,9 @@ let mut sec = Core::new_section("Examples");
 let mut itemize = Core::new_bloc("itemize");
 
 let countries = vec!["France", "UK", "Germany", "Ialy"];
-sec.add(Core::new_raw_text("Here is some countries in Europe"));
+sec.add(Core::text("Here is some countries in Europe"));
 for country in countries.iter() {
-    itemize.add(Core::item(Core::new_raw_text(*country)));
+    itemize.add(Core::item(Core::text(*country)));
 }
 // Adding the itemize to the section
 sec.add(itemize);
