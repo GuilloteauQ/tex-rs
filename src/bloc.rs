@@ -7,6 +7,8 @@ use str_or_string::*;
 use latex_file::LatexFile;
 use std::io::BufWriter;
 use std::io::Write;
+use writable::*;
+
 
 pub struct Bloc {
     /// The type of the Bloc

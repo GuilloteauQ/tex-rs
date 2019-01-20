@@ -6,6 +6,7 @@ use core::*;
 use latex_file::*;
 use operators::*;
 use str_or_string::*;
+use writable::*;
 
 #[derive(Debug, PartialEq)]
 pub enum Symbols {

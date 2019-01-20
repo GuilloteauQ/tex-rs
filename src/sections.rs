@@ -5,6 +5,7 @@ use std::io::BufWriter;
 use std::io::Write;
 use latex_file::LatexFile;
 use str_or_string::*;
+use writable::*;
 
 // Temporary
 // pub type Core = usize; // Should be an Enum
