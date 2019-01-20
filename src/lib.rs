@@ -5,6 +5,7 @@ pub mod latex_file;
 pub mod operators;
 pub mod displays;
 pub mod str_or_string;
+pub mod bloc;
 
 #[cfg(test)]
 mod tests {

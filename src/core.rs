@@ -2,6 +2,7 @@
 ///
 use sections::*;
 use equations::*;
+use bloc::Bloc;
 use latex_file::LatexFile;
 use std::io::BufWriter;
 use std::io::Write;
@@ -17,6 +18,7 @@ pub enum Core {
     Sec(Section),
     RawText(String),
     Equa(Equation),
+    Bloc(Bloc),
 }
 
 impl Writable for String {
@@ -36,6 +38,7 @@ impl Writable for Core {
             &Core::Sec(ref section) => section.write_latex(&mut file),
             &Core::RawText(ref text) => text.write_latex(&mut file),
             &Core::Equa(ref eq) => eq.write_latex(&mut file),
+            &Core::Bloc(ref bloc) => bloc.write_latex(&mut file),
         }
     }
 
@@ -44,6 +47,7 @@ impl Writable for Core {
             &Core::Sec(ref section) => section.write_to_buffer(&mut buf),
             &Core::RawText(ref text) => text.write_to_buffer(&mut buf),
             &Core::Equa(ref eq) => eq.write_to_buffer(&mut buf),
+            &Core::Bloc(ref bloc) => bloc.write_to_buffer(&mut buf),
         }
     }
 }
@@ -72,6 +76,11 @@ impl Core {
     /// Returns a new equation
     pub fn new_equation(eq: Equation) -> Self {
         Core::Equa(eq)
+    }
+
+    /// Returns a new Bloc
+    pub fn new_bloc(title: &str) -> Self {
+        Core::Bloc(Bloc::new_empty(title))
     }
 }
 
