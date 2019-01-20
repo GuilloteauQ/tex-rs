@@ -7,6 +7,7 @@ pub mod displays;
 pub mod str_or_string;
 pub mod bloc;
 pub mod writable;
+pub mod symbols;
 
 #[cfg(test)]
 mod tests {
