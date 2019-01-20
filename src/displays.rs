@@ -1,9 +1,8 @@
 /// File for displaying elements in LaTeX
 ///
 
-use str_or_string::*;
 
 /// Returns the \frac of the two arguments
-pub fn frac<A: StrOrString, B: StrOrString>(top: A, bottom: B) -> String {
-    format!("\\frac{{{}}}{{{}}}", top.convert_string(), bottom.convert_string())
+pub fn frac<A: AsRef<str>, B: AsRef<str>>(top: A, bottom: B) -> String {
+    format!("\\frac{{{}}}{{{}}}", top.as_ref().to_string(), bottom.as_ref().to_string())
 }

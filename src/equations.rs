@@ -5,7 +5,6 @@ use std::io::Write;
 use symbols::*;
 use latex_file::*;
 use operators::*;
-use str_or_string::*;
 use writable::*;
 
 
@@ -30,9 +29,9 @@ impl EquationElements {
 pub type Equation = Vec<EquationElements>;
 
 /// Returns an Equation from a vector of str
-pub fn new_equation<T: StrOrString>(vec: &Vec<T>) -> Equation {
+pub fn new_equation<T: AsRef<str>>(vec: &Vec<T>) -> Equation {
     vec.iter()
-        .map(|s| EquationElements::get_enum(s.convert_string()))
+        .map(|s| EquationElements::get_enum(s.as_ref().to_string()))
         .collect()
 }
 

@@ -3,7 +3,6 @@
 ///
 
 use core::*;
-use str_or_string::*;
 use latex_file::LatexFile;
 use std::io::BufWriter;
 use std::io::Write;
@@ -20,17 +19,17 @@ pub struct Bloc {
 
 impl Bloc {
     /// Returns a new Bloc
-    pub fn new<T: StrOrString>(bloc_type: T, content: Vec<Core>) -> Self {
+    pub fn new<T: AsRef<str>>(bloc_type: T, content: Vec<Core>) -> Self {
         Bloc {
-            bloc_type: bloc_type.convert_string(),
+            bloc_type: bloc_type.as_ref().to_string(),
             content: content
         }
     }
 
     /// Returns a new Bloc with an empty body
-    pub fn new_empty<T: StrOrString>(bloc_type: T) -> Self {
+    pub fn new_empty<T: AsRef<str>>(bloc_type: T) -> Self {
         Bloc {
-            bloc_type: bloc_type.convert_string(),
+            bloc_type: bloc_type.as_ref().to_string(),
             content: Vec::new()
         }
     }

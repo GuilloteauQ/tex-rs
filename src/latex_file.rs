@@ -3,7 +3,6 @@
 use std::fs::File;
 use std::io::BufWriter;
 use std::io::{self, Write};
-use str_or_string::*;
 
 // pub type LatexFile = File;
 
@@ -48,19 +47,19 @@ impl LatexFile {
     }
 
     /// Writes an include in the file
-    pub fn write_include<T: StrOrString>(&mut self, include: T) {
+    pub fn write_include<T: AsRef<str>>(&mut self, include: T) {
         let mut buf = BufWriter::new(&mut self.file);
-        write!(&mut buf, "\\include{{{}}}\n", include.convert_string()).unwrap();
+        write!(&mut buf, "\\include{{{}}}\n", include.as_ref().to_string()).unwrap();
     }
 
     /// Change the title of the document
-    pub fn title<T: StrOrString>(&mut self, new_title: T) {
-        self.title = Some(new_title.convert_string());
+    pub fn title<T: AsRef<str>>(&mut self, new_title: T) {
+        self.title = Some(new_title.as_ref().to_string());
     }
 
     /// Change the author of the document
-    pub fn author<T: StrOrString>(&mut self, new_author: T) {
-        self.author = Some(new_author.convert_string());
+    pub fn author<T: AsRef<str>>(&mut self, new_author: T) {
+        self.author = Some(new_author.as_ref().to_string());
     }
 
     /// Removes the title of the document
@@ -74,15 +73,15 @@ impl LatexFile {
     }
 
     /// Adds a include
-    pub fn add_include<T: StrOrString>(&mut self, include: T) {
-        self.includes.push(include.convert_string());
+    pub fn add_include<T: AsRef<str>>(&mut self, include: T) {
+        self.includes.push(include.as_ref().to_string());
     }
 
     /// Adds a list of includes
-    pub fn add_include_list<T: StrOrString>(&mut self, includes: Vec<T>) {
+    pub fn add_include_list<T: AsRef<str>>(&mut self, includes: Vec<T>) {
         for include in includes.iter() {
             // self.add_include(*include);
-            self.includes.push(include.convert_string());
+            self.includes.push(include.as_ref().to_string());
         }
     }
 
@@ -119,8 +118,8 @@ impl LatexFile {
     }
 }
 /// Returns a new LatexFile
-pub fn new_latex_file<T: StrOrString>(filename: T) -> LatexFile {
-    let f = File::create(filename.convert_string()).unwrap();
+pub fn new_latex_file<T: AsRef<str>>(filename: T) -> LatexFile {
+    let f = File::create(filename.as_ref().to_string()).unwrap();
     let mut ltx_file = LatexFile {
         file: f,
         title: None,
