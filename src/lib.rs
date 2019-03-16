@@ -10,6 +10,7 @@ pub mod symbols;
 pub mod tag;
 pub mod tabular;
 pub mod into_tab;
+pub mod math_mode;
 
 #[cfg(test)]
 mod tests {

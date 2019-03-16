@@ -1,14 +1,15 @@
+use bloc::Bloc;
+use equations::*;
+use into_tab::*;
+use latex_file::LatexFile;
+use math_mode::*;
 /// File to define the core of a LaTex file
 ///
 use sections::*;
-use equations::*;
-use bloc::Bloc;
-use latex_file::LatexFile;
 use std::io::BufWriter;
-use writable::*;
-use tag::*;
 use tabular::*;
-use into_tab::*;
+use tag::*;
+use writable::*;
 
 // pub type LatexFile = File;
 
@@ -20,6 +21,7 @@ pub enum Core {
     Bloc(Bloc),
     Tag(SingleTag),
     Tab(Tabular),
+    Math(MathContent),
 }
 
 impl Writable for Core {
@@ -31,6 +33,7 @@ impl Writable for Core {
             &Core::Bloc(ref bloc) => bloc.write_latex(&mut file),
             &Core::Tag(ref tag) => tag.write_latex(&mut file),
             &Core::Tab(ref tab) => tab.write_latex(&mut file),
+            &Core::Math(ref m) => m.write_latex(&mut file),
         }
     }
 
@@ -42,6 +45,7 @@ impl Writable for Core {
             &Core::Bloc(ref bloc) => bloc.write_to_buffer(&mut buf),
             &Core::Tag(ref tag) => tag.write_to_buffer(&mut buf),
             &Core::Tab(ref tab) => tab.write_to_buffer(&mut buf),
+            &Core::Math(ref m) => m.write_to_buffer(&mut buf),
         }
     }
 }
@@ -87,12 +91,17 @@ impl Core {
         Core::Tag(SingleTag::item(content))
     }
 
+    /// Return a math mode element
+    pub fn math<T: AsRef<str>>(content: T) -> Self {
+        Core::Math(MathContent::new(content.as_ref().to_string()))
+    }
+
     /// Add an element to the content, if possible
     pub fn add(&mut self, element: Core) {
         match self {
             &mut Core::Sec(ref mut section) => section.add_content(element),
             &mut Core::Bloc(ref mut bloc) => bloc.add(element),
-            _ => panic!("No method 'add' for this type of data")
+            _ => panic!("No method 'add' for this type of data"),
         }
     }
 }
@@ -158,4 +167,35 @@ mod tests_core {
         tab.write_latex(&mut f);
         f.write_footer();
     }
+
+    #[test]
+    fn test_math_mode_simple() {
+        let mut f = new_latex_file("./tests_results/core/math_mode_simple.tex");
+        f.begin_document();
+        let m = Core::math("1 + 2 = 3");
+        m.write_latex(&mut f);
+        f.write_footer();
+    }
+
+    #[test]
+    fn test_math_mode_symbol() {
+        let mut f = new_latex_file("./tests_results/core/math_mode_symbol.tex");
+        f.begin_document();
+        let m = Core::math("1 \\leq 2 = 3");
+        m.write_latex(&mut f);
+        f.write_footer();
+    }
+
+    #[test]
+    fn test_math_mode_in_text() {
+        let mut f = new_latex_file("./tests_results/core/math_mode_in_text.tex");
+        f.begin_document();
+        let mut p = Core::bloc("center");
+        p.add(Core::text("This is the most interesting equation:"));
+        let m = Core::math("1 + 2 = 3");
+        p.add(m);
+        p.write_latex(&mut f);
+        f.write_footer();
+    }
+
 }
