@@ -1,9 +1,9 @@
 /// File defining the section / subsection / subsubsection of the file
 ///
 use core::*;
+use latex_file::LatexFile;
 use std::io::BufWriter;
 use std::io::Write;
-use latex_file::LatexFile;
 use writable::*;
 
 // Temporary
@@ -14,7 +14,7 @@ use writable::*;
 pub struct Section {
     /// The title of the section
     pub title: String,
-    /// 0 -> Section, 1 -> SubSection, 2 -> SubSubSection
+    /// 0 -> Section, 1 -> SubSection, 2 -> SubSubSection, 3 -> paragraph
     rank: usize,
     /// The content of the section
     content: Vec<Core>,
@@ -23,7 +23,7 @@ pub struct Section {
 impl Section {
     /// Returns a new (sub, subsub)Section depending on the rank
     fn new<T: AsRef<str>>(title: T, rank: usize) -> Self {
-        assert!(rank <= 2);
+        assert!(rank <= 3);
         Section {
             title: title.as_ref().to_string(),
             rank: rank,
@@ -44,6 +44,11 @@ impl Section {
     /// Returns a new SubSubSection
     pub fn new_subsubsection<T: AsRef<str>>(title: T) -> Self {
         Section::new(title.as_ref().to_string(), 2)
+    }
+
+    /// Returns a new Paragraph
+    pub fn new_paragraph<T: AsRef<str>>(title: T) -> Self {
+        Section::new(title.as_ref().to_string(), 3)
     }
 
     /// Push some content in the section
@@ -67,6 +72,7 @@ impl Section {
             0 => "\\section",
             1 => "\\subsection",
             2 => "\\subsubsection",
+            3 => "\\paragraph",
             _ => panic!("The rank of this section is not valid!"),
         }
     }
@@ -83,6 +89,7 @@ impl Writable for Section {
         for item in self.content.iter() {
             item.write_to_buffer(&mut buf);
         }
+        write!(&mut buf, "\n").unwrap();
     }
 }
 

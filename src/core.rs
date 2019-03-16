@@ -66,6 +66,11 @@ impl Core {
         Core::Sec(Section::new_subsubsection(title.as_ref().to_string()))
     }
 
+    /// Returns a new paragraph
+    pub fn paragraph<T: AsRef<str>>(title: T) -> Self {
+        Core::Sec(Section::new_paragraph(title.as_ref().to_string()))
+    }
+
     /// Return a new text
     pub fn text<T: AsRef<str>>(raw_text: T) -> Self {
         Core::RawText(raw_text.as_ref().to_string())
@@ -181,7 +186,7 @@ mod tests_core {
     fn test_math_mode_symbol() {
         let mut f = new_latex_file("./tests_results/core/math_mode_symbol.tex");
         f.begin_document();
-        let m = Core::math("1 \\leq 2 = 3");
+        let m = Core::math(r"1 \leq 2 = 3");
         m.write_latex(&mut f);
         f.write_footer();
     }
@@ -190,7 +195,7 @@ mod tests_core {
     fn test_math_mode_in_text() {
         let mut f = new_latex_file("./tests_results/core/math_mode_in_text.tex");
         f.begin_document();
-        let mut p = Core::bloc("center");
+        let mut p = Core::paragraph("");
         p.add(Core::text("This is the most interesting equation:"));
         let m = Core::math("1 + 2 = 3");
         p.add(m);
