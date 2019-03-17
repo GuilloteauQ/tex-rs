@@ -1,22 +1,36 @@
 extern crate tex_rs;
+use std::io;
 use tex_rs::core::*;
 use tex_rs::latex_file::*;
 use tex_rs::writable::Writable;
 
 fn main() {
-    let name = "Quentin Guilloteau";
-    let interest1 = "Parallel programming";
-    let interest2 = "Compiler design";
-    let course = "parallel programming";
+    let mut variables = vec![String::new(), String::new(), String::new(), String::new()];
+    let queries = vec![
+        "your name",
+        "first interest",
+        "second interest",
+        "valuable course",
+    ];
+    let stdin = io::stdin();
+
+    for (mut var, query) in variables.iter_mut().zip(queries.iter()) {
+        println!(">>> Enter {}:", query);
+        let _ = stdin.read_line(&mut var);
+    }
+    let name = &variables[0];
+    let interest1 = &variables[1];
+    let interest2 = &variables[2];
+    let course = &variables[3];
 
     let mut f = new_latex_file("cover_letter.tex");
     f.title("Cover Letter");
-    f.author(name);
+    f.author(&name);
     f.begin_document();
 
     let mut presentation = Core::paragraph("");
     presentation.add(Core::text(format!("I am a student in Computer Science, interested in {} and {}. My on-going degree has already given me a full set of skills to adress any difficulty that I could encounter during this internship.", interest1, interest2)));
-    presentation.add(Core::text(format!("In particular, the course on {} provided to me a great great understanding of this internship's topic.", course)));
+    presentation.add(Core::text(format!("In particular, the course on {} provided to me a great understanding of this internship's topic.", course)));
 
     let mut bs = Core::paragraph("");
 
