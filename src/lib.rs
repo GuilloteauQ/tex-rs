@@ -11,6 +11,7 @@ pub mod tag;
 pub mod tabular;
 pub mod into_tab;
 pub mod math_mode;
+pub mod graphics;
 
 #[cfg(test)]
 mod tests {

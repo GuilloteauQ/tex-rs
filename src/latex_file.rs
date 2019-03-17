@@ -1,5 +1,4 @@
 /// File implementing the LatexFile type
-
 use std::fs::File;
 use std::io::BufWriter;
 use std::io::{self, Write};
@@ -90,7 +89,7 @@ impl LatexFile {
         /* ----- INCLUDES ----- */
         for include in self.includes.iter() {
             let mut buf = BufWriter::new(&mut self.file);
-            write!(&mut buf, "\\include{{{}}}\n", include.to_string()).unwrap();
+            write!(&mut buf, "\\usepackage{{{}}}\n", include.to_string()).unwrap();
         }
 
         /* ----- TITLE ----- */

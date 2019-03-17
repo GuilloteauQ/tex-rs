@@ -1,5 +1,6 @@
 use bloc::Bloc;
 use equations::*;
+use graphics::*;
 use into_tab::*;
 use latex_file::LatexFile;
 use math_mode::*;
@@ -22,6 +23,7 @@ pub enum Core {
     Tag(SingleTag),
     Tab(Tabular),
     Math(MathContent),
+    Graph(Graphic),
 }
 
 impl Writable for Core {
@@ -34,6 +36,7 @@ impl Writable for Core {
             &Core::Tag(ref tag) => tag.write_latex(&mut file),
             &Core::Tab(ref tab) => tab.write_latex(&mut file),
             &Core::Math(ref m) => m.write_latex(&mut file),
+            &Core::Graph(ref g) => g.write_latex(&mut file),
         }
     }
 
@@ -46,6 +49,7 @@ impl Writable for Core {
             &Core::Tag(ref tag) => tag.write_to_buffer(&mut buf),
             &Core::Tab(ref tab) => tab.write_to_buffer(&mut buf),
             &Core::Math(ref m) => m.write_to_buffer(&mut buf),
+            &Core::Graph(ref g) => g.write_to_buffer(&mut buf),
         }
     }
 }
@@ -99,6 +103,22 @@ impl Core {
     /// Return a math mode element
     pub fn math<T: AsRef<str>>(content: T) -> Self {
         Core::Math(MathContent::new(content.as_ref().to_string()))
+    }
+
+    /// Return a graphic element
+    pub fn graphic<T1: AsRef<str>, T2: AsRef<str>>(filename: T1, description: T2) -> Self {
+        Core::Graph(Graphic::new(
+            filename.as_ref().to_string(),
+            description.as_ref().to_string(),
+        ))
+    }
+
+    /// Change the scale of the graphic
+    pub fn set_scale(&mut self, new_scale: f64) {
+        match self {
+            &mut Core::Graph(ref mut graph) => graph.set_scale(new_scale),
+            _ => {}
+        }
     }
 
     /// Add an element to the content, if possible
@@ -200,6 +220,27 @@ mod tests_core {
         let m = Core::math("1 + 2 = 3");
         p.add(m);
         p.write_latex(&mut f);
+        f.write_footer();
+    }
+
+    #[test]
+    fn test_include_graphics() {
+        let mut f = new_latex_file("./tests_results/core/include_graphics.tex");
+        f.add_include("graphicx");
+        f.begin_document();
+        let im = Core::graphic("rust_logo.jpg", "This is the Rust logo!");
+        im.write_latex(&mut f);
+        f.write_footer();
+    }
+
+    #[test]
+    fn test_include_graphics_scale() {
+        let mut f = new_latex_file("./tests_results/core/include_graphics_scale.tex");
+        f.add_include("graphicx");
+        f.begin_document();
+        let mut im = Core::graphic("rust_logo.jpg", "This is the Rust logo!");
+        im.set_scale(0.5);
+        im.write_latex(&mut f);
         f.write_footer();
     }
 
