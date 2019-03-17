@@ -12,8 +12,8 @@ pub struct LatexFile {
     title: Option<String>,
     /// The name of the authors
     author: Option<String>,
-    /// The names of the includes
-    includes: Vec<String>,
+    /// The names of the packages
+    packages: Vec<String>,
     /// The style of the document (article, book, ...)
     style: String,
 }
@@ -45,10 +45,15 @@ impl LatexFile {
         self.write_in_file("\\end{document}\n");
     }
 
-    /// Writes an include in the file
-    pub fn write_include<T: AsRef<str>>(&mut self, include: T) {
+    /// Writes an package in the file
+    pub fn write_package<T: AsRef<str>>(&mut self, package: T) {
         let mut buf = BufWriter::new(&mut self.file);
-        write!(&mut buf, "\\include{{{}}}\n", include.as_ref().to_string()).unwrap();
+        write!(
+            &mut buf,
+            "\\usepackage{{{}}}\n",
+            package.as_ref().to_string()
+        )
+        .unwrap();
     }
 
     /// Change the title of the document
@@ -71,25 +76,25 @@ impl LatexFile {
         self.author = None;
     }
 
-    /// Adds a include
-    pub fn add_include<T: AsRef<str>>(&mut self, include: T) {
-        self.includes.push(include.as_ref().to_string());
+    /// Adds a package
+    pub fn add_package<T: AsRef<str>>(&mut self, package: T) {
+        self.packages.push(package.as_ref().to_string());
     }
 
-    /// Adds a list of includes
-    pub fn add_include_list<T: AsRef<str>>(&mut self, includes: Vec<T>) {
-        for include in includes.iter() {
+    /// Adds a list of packages
+    pub fn add_package_list<T: AsRef<str>>(&mut self, packages: Vec<T>) {
+        for package in packages.iter() {
             // self.add_include(*include);
-            self.includes.push(include.as_ref().to_string());
+            self.packages.push(package.as_ref().to_string());
         }
     }
 
-    /// Writes the title, authors, includes, ... and begin the document
+    /// Writes the title, authors, packages, ... and begin the document
     pub fn begin_document(&mut self) {
         /* ----- INCLUDES ----- */
-        for include in self.includes.iter() {
+        for package in self.packages.iter() {
             let mut buf = BufWriter::new(&mut self.file);
-            write!(&mut buf, "\\usepackage{{{}}}\n", include.to_string()).unwrap();
+            write!(&mut buf, "\\usepackage{{{}}}\n", package.to_string()).unwrap();
         }
 
         /* ----- TITLE ----- */
@@ -123,7 +128,7 @@ pub fn new_latex_file<T: AsRef<str>>(filename: T) -> LatexFile {
         file: f,
         title: None,
         author: None,
-        includes: Vec::new(),
+        packages: Vec::new(),
         style: "article".to_string(),
     };
     ltx_file.write_header_article();

@@ -226,7 +226,7 @@ mod tests_core {
     #[test]
     fn test_include_graphics() {
         let mut f = new_latex_file("./tests_results/core/include_graphics.tex");
-        f.add_include("graphicx");
+        f.add_package("graphicx");
         f.begin_document();
         let im = Core::graphic("rust_logo.jpg", "This is the Rust logo!");
         im.write_latex(&mut f);
@@ -236,7 +236,7 @@ mod tests_core {
     #[test]
     fn test_include_graphics_scale() {
         let mut f = new_latex_file("./tests_results/core/include_graphics_scale.tex");
-        f.add_include("graphicx");
+        f.add_package("graphicx");
         f.begin_document();
         let mut im = Core::graphic("rust_logo.jpg", "This is the Rust logo!");
         im.set_scale(0.5);
