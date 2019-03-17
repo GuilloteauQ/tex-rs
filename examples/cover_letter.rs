@@ -5,8 +5,15 @@ use tex_rs::latex_file::*;
 use tex_rs::writable::Writable;
 
 fn main() {
-    let mut variables = vec![String::new(), String::new(), String::new(), String::new()];
+    let mut variables = vec![
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+        String::new(),
+    ];
     let queries = vec![
+        "nationality",
         "your name",
         "first interest",
         "second interest",
@@ -18,10 +25,11 @@ fn main() {
         println!(">>> Enter {}:", query);
         let _ = stdin.read_line(&mut var);
     }
-    let name = &variables[0];
-    let interest1 = &variables[1];
-    let interest2 = &variables[2];
-    let course = &variables[3];
+    let nationality = &variables[0];
+    let name = &variables[1];
+    let interest1 = &variables[2];
+    let interest2 = &variables[3];
+    let course = &variables[4];
 
     let mut f = new_latex_file("cover_letter.tex");
     f.title("Cover Letter");
@@ -29,7 +37,7 @@ fn main() {
     f.begin_document();
 
     let mut presentation = Core::paragraph("");
-    presentation.add(Core::text(format!("I am a student in Computer Science, interested in {} and {}. My on-going degree has already given me a full set of skills to adress any difficulty that I could encounter during this internship.", interest1, interest2)));
+    presentation.add(Core::text(format!("I am a {} student in Computer Science, interested in {} and {}. My on-going degree has already given me a full set of skills to adress any difficulty that I could encounter during this internship.", nationality, interest1, interest2)));
     presentation.add(Core::text(format!("In particular, the course on {} provided to me a great understanding of this internship's topic.", course)));
 
     let mut bs = Core::paragraph("");
