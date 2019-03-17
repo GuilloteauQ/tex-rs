@@ -11,7 +11,7 @@ fn main() {
 
     let mut f = new_latex_file("cover_letter.tex");
     f.title("Cover Letter");
-    f.author(format!("{}", name));
+    f.author(name);
     f.begin_document();
 
     let mut presentation = Core::paragraph("");
@@ -29,7 +29,7 @@ fn main() {
     end.add(Core::text("Respectfully,"));
 
     let mut signature = Core::paragraph("");
-    signature.add(Core::text(format!("{}", name)));
+    signature.add(Core::text(name));
 
     presentation.write_latex(&mut f);
     bs.write_latex(&mut f);
