@@ -91,29 +91,31 @@ impl LatexFile {
 
     /// Writes the title, authors, packages, ... and begin the document
     pub fn begin_document(&mut self) {
-        /* ----- INCLUDES ----- */
-        for package in self.packages.iter() {
+        {
             let mut buf = BufWriter::new(&mut self.file);
-            write!(&mut buf, "\\usepackage{{{}}}\n", package.to_string()).unwrap();
+            /* ----- INCLUDES ----- */
+            for package in self.packages.iter() {
+                write!(&mut buf, "\\usepackage{{{}}}\n", package.to_string()).unwrap();
+            }
+
+            /* ----- TITLE ----- */
+            match self.title {
+                None => {}
+                Some(ref t) => {
+                    write!(&mut buf, "\\title{{{}}}\n", t.to_string()).unwrap();
+                }
+            };
+
+            /* ----- AUTHOR ----- */
+            match self.author {
+                None => {}
+                Some(ref auth) => {
+                    write!(&mut buf, "\\author{{{}}}\n", auth.to_string()).unwrap();
+                }
+            };
+
+            write!(&mut buf, "\\date{{}}\n").unwrap();
         }
-
-        /* ----- TITLE ----- */
-        match self.title {
-            None => {}
-            Some(ref t) => {
-                let mut buf = BufWriter::new(&mut self.file);
-                write!(&mut buf, "\\title{{{}}}\n", t.to_string()).unwrap();
-            }
-        };
-
-        /* ----- AUTHOR ----- */
-        match self.author {
-            None => {}
-            Some(ref auth) => {
-                let mut buf = BufWriter::new(&mut self.file);
-                write!(&mut buf, "\\author{{{}}}\n", auth.to_string()).unwrap();
-            }
-        };
 
         self.write_in_file("\\begin{document}\n");
         if self.title != None || self.author != None {
