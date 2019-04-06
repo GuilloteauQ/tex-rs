@@ -1,4 +1,5 @@
 use bloc::Bloc;
+use content_from_file::*;
 use equations::*;
 use graphics::*;
 use into_tab::*;
@@ -24,6 +25,7 @@ pub enum Core {
     Tab(Tabular),
     Math(MathContent),
     Graph(Graphic),
+    Code(Code),
 }
 
 impl Writable for Core {
@@ -37,6 +39,7 @@ impl Writable for Core {
             &Core::Tab(ref tab) => tab.write_latex(&mut file),
             &Core::Math(ref m) => m.write_latex(&mut file),
             &Core::Graph(ref g) => g.write_latex(&mut file),
+            &Core::Code(ref c) => c.write_latex(&mut file),
         }
     }
 
@@ -50,6 +53,7 @@ impl Writable for Core {
             &Core::Tab(ref tab) => tab.write_to_buffer(&mut buf),
             &Core::Math(ref m) => m.write_to_buffer(&mut buf),
             &Core::Graph(ref g) => g.write_to_buffer(&mut buf),
+            &Core::Code(ref c) => c.write_to_buffer(&mut buf),
         }
     }
 }
@@ -119,6 +123,14 @@ impl Core {
             &mut Core::Graph(ref mut graph) => graph.set_scale(new_scale),
             _ => {}
         }
+    }
+
+    /// Returns a new Code element
+    pub fn code<T1: AsRef<str>, T2: AsRef<str>>(filename: T1, language: T2) -> Self {
+        Core::Code(Code::new(
+            filename.as_ref().to_string(),
+            language.as_ref().to_string(),
+        ))
     }
 
     /// Add an element to the content, if possible
@@ -241,6 +253,16 @@ mod tests_core {
         let mut im = Core::graphic("rust_logo.jpg", "This is the Rust logo!");
         im.set_scale(0.5);
         im.write_latex(&mut f);
+        f.write_footer();
+    }
+
+    #[test]
+    fn test_include_code() {
+        let mut f = new_latex_file("./tests_results/core/include_code.tex");
+        f.add_package("listings");
+        f.begin_document();
+        let code = Core::code("../../test.c", "C");
+        code.write_latex(&mut f);
         f.write_footer();
     }
 

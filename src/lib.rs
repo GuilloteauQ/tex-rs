@@ -12,6 +12,7 @@ pub mod tabular;
 pub mod into_tab;
 pub mod math_mode;
 pub mod graphics;
+pub mod content_from_file;
 
 #[cfg(test)]
 mod tests {
