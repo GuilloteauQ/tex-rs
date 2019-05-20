@@ -13,7 +13,7 @@ pub struct Code {
     language: String,
 }
 
-// I'm actually not sure that we want to ba able to change
+// I'm actually not sure that we want to be able to change
 // the filename or the extension
 impl Code {
     /// Returns a new Code struct

@@ -8,6 +8,8 @@ use math_mode::*;
 /// File to define the core of a LaTex file
 ///
 use sections::*;
+use std::fs::File;
+use std::io::prelude::*;
 use std::io::BufWriter;
 use tabular::*;
 use tag::*;
@@ -26,6 +28,7 @@ pub enum Core {
     Math(MathContent),
     Graph(Graphic),
     Code(Code),
+    TextFromFile(String),
 }
 
 impl Writable for Core {
@@ -40,6 +43,12 @@ impl Writable for Core {
             Core::Math(ref m) => m.write_latex(&mut file),
             Core::Graph(ref g) => g.write_latex(&mut file),
             Core::Code(ref c) => c.write_latex(&mut file),
+            Core::TextFromFile(ref filename) => {
+                let mut out_file = File::open(filename).unwrap();
+                let mut contents = String::new();
+                out_file.read_to_string(&mut contents).unwrap();
+                contents.write_latex(&mut file)
+            }
         }
     }
 
@@ -54,6 +63,7 @@ impl Writable for Core {
             Core::Math(ref m) => m.write_to_buffer(&mut buf),
             Core::Graph(ref g) => g.write_to_buffer(&mut buf),
             Core::Code(ref c) => c.write_to_buffer(&mut buf),
+            _ => (),
         }
     }
 }
@@ -130,6 +140,11 @@ impl Core {
             filename.as_ref().to_string(),
             language.as_ref().to_string(),
         ))
+    }
+
+    /// Returns a new text from file element
+    pub fn text_from_file<T: AsRef<str>>(filename: T) -> Self {
+        Core::TextFromFile(filename.as_ref().to_string())
     }
 
     /// Add an element to the content, if possible
@@ -262,6 +277,15 @@ mod tests_core {
         f.begin_document();
         let code = Core::code("../../test.c", "C");
         code.write_latex(&mut f);
+        f.write_footer();
+    }
+
+    #[test]
+    fn test_include_text() {
+        let mut f = new_latex_file("./tests_results/core/include_text.tex");
+        f.begin_document();
+        let text = Core::text_from_file("text.txt");
+        text.write_latex(&mut f);
         f.write_footer();
     }
 
