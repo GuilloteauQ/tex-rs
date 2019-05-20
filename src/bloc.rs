@@ -1,20 +1,18 @@
 /// Defines a bloc in LaTex
 /// for example \begin{center}...\end{center}
 ///
-
 use core::*;
 use latex_file::LatexFile;
 use std::io::BufWriter;
 use std::io::Write;
 use writable::*;
 
-
 #[derive(Clone)]
 pub struct Bloc {
     /// The type of the Bloc
-    bloc_type : String,
+    bloc_type: String,
     /// The content in the Bloc
-    content : Vec<Core>,
+    content: Vec<Core>,
 }
 
 impl Bloc {
@@ -22,7 +20,7 @@ impl Bloc {
     pub fn new<T: AsRef<str>>(bloc_type: T, content: Vec<Core>) -> Self {
         Bloc {
             bloc_type: bloc_type.as_ref().to_string(),
-            content: content
+            content,
         }
     }
 
@@ -30,7 +28,7 @@ impl Bloc {
     pub fn new_empty<T: AsRef<str>>(bloc_type: T) -> Self {
         Bloc {
             bloc_type: bloc_type.as_ref().to_string(),
-            content: Vec::new()
+            content: Vec::new(),
         }
     }
 
@@ -47,11 +45,11 @@ impl Writable for Bloc {
     }
 
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>) {
-        write!(&mut buf, "\\begin{{{}}}\n", self.bloc_type).unwrap();
+        writeln!(&mut buf, "\\begin{{{}}}", self.bloc_type).unwrap();
         for item in self.content.iter() {
             item.write_to_buffer(&mut buf);
         }
-        write!(&mut buf, "\n\\end{{{}}}\n", self.bloc_type).unwrap();
+        writeln!(&mut buf, "\n\\end{{{}}}", self.bloc_type).unwrap();
     }
 }
 

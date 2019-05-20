@@ -1,12 +1,11 @@
 /// Implementation of tabular
 ///
-
 use core::*;
 use into_tab::*;
-use writable::Writable;
 use latex_file::LatexFile;
 use std::io::BufWriter;
 use std::io::Write;
+use writable::Writable;
 
 #[derive(Clone)]
 pub struct Tabular {
@@ -38,17 +37,17 @@ impl Writable for Tabular {
     }
 
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>) {
-        write!(&mut buf, "\\begin{{tabular}}{{{}}}\n", self.align()).unwrap();
+        writeln!(&mut buf, "\\begin{{tabular}}{{{}}}", self.align()).unwrap();
         for line in self.content.iter() {
-            write!(&mut buf, " \\hline\n").unwrap();
+            writeln!(&mut buf, " \\hline").unwrap();
             line[0].write_to_buffer(&mut buf);
             for elem in line.iter().skip(1) {
                 write!(&mut buf, " & ").unwrap();
                 elem.write_to_buffer(&mut buf);
             }
-            write!(&mut buf, " \\\\\n").unwrap();
+            writeln!(&mut buf, " \\\\").unwrap();
         }
-        write!(&mut buf, " \\hline\n").unwrap();
-        write!(&mut buf, "\\end{{tabular}}\n").unwrap();
+        writeln!(&mut buf, " \\hline").unwrap();
+        writeln!(&mut buf, "\\end{{tabular}}").unwrap();
     }
 }

@@ -1,10 +1,9 @@
+use latex_file::*;
 /// File defining the structure of an operator
 ///
 use std::io::BufWriter;
 use std::io::Write;
-use latex_file::*;
 use writable::*;
-
 
 #[derive(Clone)]
 pub enum VarOrImm {
@@ -34,9 +33,9 @@ impl VarOrImm {
     }
 
     pub fn get_val(&self) -> String {
-        match self {
-            &VarOrImm::Var(ref x) => String::from(format!("{}", x)),
-            &VarOrImm::Imm(ref x) => String::from(format!("{}", x)),
+        match *self {
+            VarOrImm::Var(ref x) => x.to_string(),
+            VarOrImm::Imm(ref x) => x.to_string(),
         }
     }
 }
@@ -52,34 +51,33 @@ pub enum Operators {
 impl Operators {
     /// Returns the Latex Code for the operator
     pub fn latex_code_op(&self) -> &str {
-        let code = match self {
-            &Operators::Sum(_, _, _) => "\\sum",
-            &Operators::Product(_, _, _) => "\\prod",
-        };
-        code
+        match *self {
+            Operators::Sum(_, _, _) => "\\sum",
+            Operators::Product(_, _, _) => "\\prod",
+        }
     }
 
     /// Returns the variable of the operator
     pub fn variable(&self) -> &VarOrImm {
-        match self {
-            &Operators::Sum(ref v, _, _) => v,
-            &Operators::Product(ref v, _, _) => v,
+        match *self {
+            Operators::Sum(ref v, _, _) => v,
+            Operators::Product(ref v, _, _) => v,
         }
     }
 
     /// Returns the variable of the operator
     pub fn begin(&self) -> &VarOrImm {
-        match self {
-            &Operators::Sum(_, ref b, _) => b,
-            &Operators::Product(_, ref b, _) => b,
+        match *self {
+            Operators::Sum(_, ref b, _) => b,
+            Operators::Product(_, ref b, _) => b,
         }
     }
 
     /// Returns the variable of the operator
     pub fn end(&self) -> &VarOrImm {
-        match self {
-            &Operators::Sum(_, _, ref e) => e,
-            &Operators::Product(_, _, ref e) => e,
+        match *self {
+            Operators::Sum(_, _, ref e) => e,
+            Operators::Product(_, _, ref e) => e,
         }
     }
 

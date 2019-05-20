@@ -1,13 +1,11 @@
+use latex_file::*;
+use operators::*;
 /// File defining the structure of an equation
 ///
 use std::io::BufWriter;
 use std::io::Write;
 use symbols::*;
-use latex_file::*;
-use operators::*;
 use writable::*;
-
-
 
 #[derive(Clone)]
 pub enum EquationElements {
@@ -19,9 +17,9 @@ pub enum EquationElements {
 impl EquationElements {
     fn get_enum(elem: String) -> Self {
         if is_op(&elem) {
-            return EquationElements::Symb(Symbols::get_symbol(elem));
+            EquationElements::Symb(Symbols::get_symbol(elem))
         } else {
-            return EquationElements::Text(elem);
+            EquationElements::Text(elem)
         }
     }
 }
@@ -29,7 +27,7 @@ impl EquationElements {
 pub type Equation = Vec<EquationElements>;
 
 /// Returns an Equation from a vector of str
-pub fn new_equation<T: AsRef<str>>(vec: &Vec<T>) -> Equation {
+pub fn new_equation<T: AsRef<str>>(vec: &[T]) -> Equation {
     vec.iter()
         .map(|s| EquationElements::get_enum(s.as_ref().to_string()))
         .collect()
@@ -42,10 +40,10 @@ impl Writable for EquationElements {
     }
 
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>) {
-        match self {
-            &EquationElements::Text(ref s) => write!(&mut buf, "{} ", s).unwrap(),
-            &EquationElements::Symb(ref s) => write!(&mut buf, "{} ", s.latex_code()).unwrap(),
-            &EquationElements::Operator(ref s) => write!(&mut buf, "{} ", s.latex_code()).unwrap(),
+        match *self {
+            EquationElements::Text(ref s) => write!(&mut buf, "{} ", s).unwrap(),
+            EquationElements::Symb(ref s) => write!(&mut buf, "{} ", s.latex_code()).unwrap(),
+            EquationElements::Operator(ref s) => write!(&mut buf, "{} ", s.latex_code()).unwrap(),
         }
     }
 }
@@ -61,7 +59,7 @@ impl Writable for Equation {
         for item in self.iter() {
             item.write_to_buffer(&mut buf);
         }
-        write!(&mut buf, "\n\\end{{equation}}\n",).unwrap();
+        writeln!(&mut buf, "\n\\end{{equation}}",).unwrap();
     }
 }
 

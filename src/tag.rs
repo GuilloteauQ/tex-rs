@@ -1,8 +1,8 @@
+use core::*;
+use latex_file::LatexFile;
 use std::io::BufWriter;
 use std::io::Write;
-use latex_file::LatexFile;
 use writable::*;
-use core::*;
 
 #[derive(Clone)]
 pub struct SingleTag {
@@ -16,8 +16,8 @@ impl SingleTag {
     /// Returns a new SingleTag
     fn new(name: String, content: Core) -> Self {
         SingleTag {
-            name: name,
-            content: Box::new(content)
+            name,
+            content: Box::new(content),
         }
     }
 
@@ -26,7 +26,6 @@ impl SingleTag {
         SingleTag::new("item".to_string(), content)
     }
 }
-
 
 impl Writable for SingleTag {
     fn write_latex(&self, file: &mut LatexFile) {
@@ -37,7 +36,6 @@ impl Writable for SingleTag {
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>) {
         write!(&mut buf, "\\{} ", self.name).unwrap();
         self.content.write_to_buffer(&mut buf);
-        write!(&mut buf, "\n").unwrap();
+        writeln!(&mut buf).unwrap();
     }
-
 }

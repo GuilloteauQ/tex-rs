@@ -35,32 +35,38 @@ impl Symbols {
 
     /// Returns the string corresponding to the enum
     pub fn get_string(&self) -> &str {
-        match self {
-            &Symbols::Equals => "=",
-            &Symbols::LessOrEquals => "<=",
-            &Symbols::Less => "<",
-            &Symbols::MoreOrEquals => ">=",
-            &Symbols::More => ">",
-            &Symbols::Diff => "!=",
+        match *self {
+            Symbols::Equals => "=",
+            Symbols::LessOrEquals => "<=",
+            Symbols::Less => "<",
+            Symbols::MoreOrEquals => ">=",
+            Symbols::More => ">",
+            Symbols::Diff => "!=",
         }
     }
 
     /// Returns the LaTeX "code" for each item
     pub fn latex_code(&self) -> String {
-        let x = match self {
-            &Symbols::Equals => " = ",
-            &Symbols::LessOrEquals => " \\leq ",
-            &Symbols::Less => " < ",
-            &Symbols::MoreOrEquals => " \\geq ",
-            &Symbols::More => " > ",
-            &Symbols::Diff => " \\neq ",
+        let x = match *self {
+            Symbols::Equals => " = ",
+            Symbols::LessOrEquals => " \\leq ",
+            Symbols::Less => " < ",
+            Symbols::MoreOrEquals => " \\geq ",
+            Symbols::More => " > ",
+            Symbols::Diff => " \\neq ",
         };
         String::from(x)
     }
 }
 
-pub fn is_op(s: &String) -> bool {
-    s == "==" || s == "=" || s == "<" || s == "<=" || s == ">" || s == ">=" || s == "!="
+pub fn is_op(s: &str) -> bool {
+    s == "=="
+        || s == "="
+        || s == "<"
+        || s == "<="
+        || s == ">"
+        || s == ">="
+        || s == "!="
         || s == "<>"
 }
 
@@ -91,5 +97,3 @@ mod tests_symbols {
     }
 
 }
-
-

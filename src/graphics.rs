@@ -16,9 +16,9 @@ pub struct Graphic {
 impl Graphic {
     pub fn new(filename: String, description: String) -> Self {
         Graphic {
-            filename: filename,
+            filename,
             scale: 1.0,
-            description: description,
+            description,
         }
     }
 
@@ -34,6 +34,6 @@ impl Writable for Graphic {
     }
 
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>) {
-        write!(&mut buf, "\\begin{{figure}}\n\t\\includegraphics[scale={}]{{{}}}\n\t\\caption{{{}}}\n\\end{{figure}}\n", self.scale, self.filename, self.description).unwrap();
+        writeln!(&mut buf, "\\begin{{figure}}\n\t\\includegraphics[scale={}]{{{}}}\n\t\\caption{{{}}}\n\\end{{figure}}", self.scale, self.filename, self.description).unwrap();
     }
 }

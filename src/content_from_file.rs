@@ -1,6 +1,4 @@
 use latex_file::*;
-use std::fs::File;
-use std::io::prelude::*;
 /// File defining a method to import content from an other file
 ///
 use std::io::BufWriter;
@@ -31,9 +29,9 @@ impl Writable for Code {
     }
 
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>) {
-        write!(
+        writeln!(
             &mut buf,
-            "\\lstinputlisting[language={}]{{{}}}\n",
+            "\\lstinputlisting[language={}]{{{}}}",
             self.language, self.filename
         )
         .unwrap();

@@ -26,7 +26,7 @@ impl Section {
         assert!(rank <= 3);
         Section {
             title: title.as_ref().to_string(),
-            rank: rank,
+            rank,
             content: Vec::new(),
         }
     }
@@ -85,11 +85,11 @@ impl Writable for Section {
     }
 
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>) {
-        write!(&mut buf, "{}{{{}}}\n", self.type_of_section(), self.title).unwrap();
+        writeln!(&mut buf, "{}{{{}}}", self.type_of_section(), self.title).unwrap();
         for item in self.content.iter() {
             item.write_to_buffer(&mut buf);
         }
-        write!(&mut buf, "\n").unwrap();
+        writeln!(&mut buf).unwrap();
     }
 }
 

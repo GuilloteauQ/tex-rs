@@ -14,8 +14,8 @@ pub struct LatexFile {
     author: Option<String>,
     /// The names of the packages
     packages: Vec<String>,
-    /// The style of the document (article, book, ...)
-    style: String,
+    // The style of the document (article, book, ...)
+    // style: String,
 }
 
 impl Write for LatexFile {
@@ -48,12 +48,7 @@ impl LatexFile {
     /// Writes an package in the file
     pub fn write_package<T: AsRef<str>>(&mut self, package: T) {
         let mut buf = BufWriter::new(&mut self.file);
-        write!(
-            &mut buf,
-            "\\usepackage{{{}}}\n",
-            package.as_ref().to_string()
-        )
-        .unwrap();
+        writeln!(&mut buf, "\\usepackage{{{}}}", package.as_ref().to_string()).unwrap();
     }
 
     /// Change the title of the document
@@ -95,14 +90,14 @@ impl LatexFile {
             let mut buf = BufWriter::new(&mut self.file);
             /* ----- INCLUDES ----- */
             for package in self.packages.iter() {
-                write!(&mut buf, "\\usepackage{{{}}}\n", package.to_string()).unwrap();
+                writeln!(&mut buf, "\\usepackage{{{}}}", package.to_string()).unwrap();
             }
 
             /* ----- TITLE ----- */
             match self.title {
                 None => {}
                 Some(ref t) => {
-                    write!(&mut buf, "\\title{{{}}}\n", t.to_string()).unwrap();
+                    writeln!(&mut buf, "\\title{{{}}}", t.to_string()).unwrap();
                 }
             };
 
@@ -110,11 +105,11 @@ impl LatexFile {
             match self.author {
                 None => {}
                 Some(ref auth) => {
-                    write!(&mut buf, "\\author{{{}}}\n", auth.to_string()).unwrap();
+                    writeln!(&mut buf, "\\author{{{}}}", auth.to_string()).unwrap();
                 }
             };
 
-            write!(&mut buf, "\\date{{}}\n").unwrap();
+            writeln!(&mut buf, "\\date{{}}").unwrap();
         }
 
         self.write_in_file("\\begin{document}\n");
@@ -131,7 +126,7 @@ pub fn new_latex_file<T: AsRef<str>>(filename: T) -> LatexFile {
         title: None,
         author: None,
         packages: Vec::new(),
-        style: "article".to_string(),
+        // style: "article".to_string(),
     };
     ltx_file.write_header_article();
     ltx_file

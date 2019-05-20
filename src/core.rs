@@ -30,30 +30,30 @@ pub enum Core {
 
 impl Writable for Core {
     fn write_latex(&self, mut file: &mut LatexFile) {
-        match self {
-            &Core::Sec(ref section) => section.write_latex(&mut file),
-            &Core::RawText(ref text) => text.write_latex(&mut file),
-            &Core::Equa(ref eq) => eq.write_latex(&mut file),
-            &Core::Bloc(ref bloc) => bloc.write_latex(&mut file),
-            &Core::Tag(ref tag) => tag.write_latex(&mut file),
-            &Core::Tab(ref tab) => tab.write_latex(&mut file),
-            &Core::Math(ref m) => m.write_latex(&mut file),
-            &Core::Graph(ref g) => g.write_latex(&mut file),
-            &Core::Code(ref c) => c.write_latex(&mut file),
+        match *self {
+            Core::Sec(ref section) => section.write_latex(&mut file),
+            Core::RawText(ref text) => text.write_latex(&mut file),
+            Core::Equa(ref eq) => eq.write_latex(&mut file),
+            Core::Bloc(ref bloc) => bloc.write_latex(&mut file),
+            Core::Tag(ref tag) => tag.write_latex(&mut file),
+            Core::Tab(ref tab) => tab.write_latex(&mut file),
+            Core::Math(ref m) => m.write_latex(&mut file),
+            Core::Graph(ref g) => g.write_latex(&mut file),
+            Core::Code(ref c) => c.write_latex(&mut file),
         }
     }
 
     fn write_to_buffer(&self, mut buf: &mut BufWriter<&mut LatexFile>) {
-        match self {
-            &Core::Sec(ref section) => section.write_to_buffer(&mut buf),
-            &Core::RawText(ref text) => text.write_to_buffer(&mut buf),
-            &Core::Equa(ref eq) => eq.write_to_buffer(&mut buf),
-            &Core::Bloc(ref bloc) => bloc.write_to_buffer(&mut buf),
-            &Core::Tag(ref tag) => tag.write_to_buffer(&mut buf),
-            &Core::Tab(ref tab) => tab.write_to_buffer(&mut buf),
-            &Core::Math(ref m) => m.write_to_buffer(&mut buf),
-            &Core::Graph(ref g) => g.write_to_buffer(&mut buf),
-            &Core::Code(ref c) => c.write_to_buffer(&mut buf),
+        match *self {
+            Core::Sec(ref section) => section.write_to_buffer(&mut buf),
+            Core::RawText(ref text) => text.write_to_buffer(&mut buf),
+            Core::Equa(ref eq) => eq.write_to_buffer(&mut buf),
+            Core::Bloc(ref bloc) => bloc.write_to_buffer(&mut buf),
+            Core::Tag(ref tag) => tag.write_to_buffer(&mut buf),
+            Core::Tab(ref tab) => tab.write_to_buffer(&mut buf),
+            Core::Math(ref m) => m.write_to_buffer(&mut buf),
+            Core::Graph(ref g) => g.write_to_buffer(&mut buf),
+            Core::Code(ref c) => c.write_to_buffer(&mut buf),
         }
     }
 }
@@ -119,9 +119,8 @@ impl Core {
 
     /// Change the scale of the graphic
     pub fn set_scale(&mut self, new_scale: f64) {
-        match self {
-            &mut Core::Graph(ref mut graph) => graph.set_scale(new_scale),
-            _ => {}
+        if let Core::Graph(ref mut graph) = *self {
+            graph.set_scale(new_scale)
         }
     }
 
@@ -135,9 +134,9 @@ impl Core {
 
     /// Add an element to the content, if possible
     pub fn add(&mut self, element: Core) {
-        match self {
-            &mut Core::Sec(ref mut section) => section.add_content(element),
-            &mut Core::Bloc(ref mut bloc) => bloc.add(element),
+        match *self {
+            Core::Sec(ref mut section) => section.add_content(element),
+            Core::Bloc(ref mut bloc) => bloc.add(element),
             _ => panic!("No method 'add' for this type of data"),
         }
     }
